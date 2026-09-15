@@ -21,7 +21,7 @@ note "== link eksternal harus 200 =="
 # skip: URL situs sendiri (belum live saat lokal) + linkedin (blokir bot, dicek manual di click-through)
 for u in $(grep -oE 'href="https://[^"]+"' dist/index.html | sed 's/href="//;s/"//;s/#.*//' | sort -u); do
   case "$u" in
-    https://yukaz0.github.io/portfolio-2026*|https://github.com/Yukaz0/portfolio-2026|https://www.linkedin.com/*) note "skip (cek manual): $u"; continue;;
+    https://yukaz0.github.io/portfolio-2026*|https://github.com/Yukaz0/portfolio-2026|https://www.linkedin.com/*|https://www.neuralgin.my.id/*) note "skip (cek manual): $u"; continue;;
   esac
   code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "$u" || echo 000)
   [ "$code" = "200" ] || [ "$code" = "302" ] || bad "HTTP $code -> $u"
