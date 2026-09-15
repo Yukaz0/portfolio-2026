@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5 # https://github.com/actions/checkout/releases
       - name: Install and build
         uses: withastro/action@v6 # https://github.com/withastro/action/releases
         # action ini sudah meng-upload artifact 'github-pages'; jangan tambah upload-pages-artifact lagi (tabrakan 409)
