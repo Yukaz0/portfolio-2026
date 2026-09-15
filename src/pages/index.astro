@@ -1,17 +1,10 @@
 ---
-
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageShell from '../components/PageShell.astro';
+import { t } from '../i18n/ui';
+import { DEFAULT_LOCALE } from '../i18n/config';
+const locale = DEFAULT_LOCALE;
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout locale={locale} title={t(locale, 'hero_name') + ' - Backend & Industrial IoT Engineer'} description={t(locale, 'hero_line1')}>
+  <PageShell locale={locale} />
+</BaseLayout>

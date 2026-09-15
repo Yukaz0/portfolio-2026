@@ -1,0 +1,17 @@
+/* Self-host subset latin. File dari Google Fonts = variable font:
+   satu woff2 melayani rentang weight yang dideklarasikan.
+   Rekomendasi produksi xai docs: self-host, tanpa dependensi Google. */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 300 500;
+  font-display: swap;
+  src: url('/fonts/GeistMono-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/Inter-latin.woff2') format('woff2');
+}

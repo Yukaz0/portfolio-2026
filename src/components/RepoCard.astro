@@ -1,0 +1,26 @@
+---
+import type { Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import profile from '../data/profile.json';
+interface Props { repo: { name: string; description: string | null; language: string | null; url: string }; locale: Locale; featured?: boolean }
+const { repo, locale, featured = false } = Astro.props;
+---
+<article class:list={[
+  'border border-hairline bg-card p-6 flex flex-col gap-md hover:border-hairline-strong transition-colors duration-150',
+  featured && 'sm:p-8 gap-lg',
+]}>
+  <div class="flex items-baseline justify-between gap-lg">
+    <h3 class:list={['font-display text-foreground m-0', featured ? 'text-[30px] leading-tight' : 'text-lg']}>
+      {repo.name}
+    </h3>
+    <span class="font-display text-xs tracking-[1px] text-mute shrink-0">{repo.language ?? '-'}</span>
+  </div>
+  <p class="text-sm leading-[1.5] text-body m-0">
+    {repo.description ?? ''}
+  </p>
+  <p class="m-0 mt-auto pt-sm">
+    <a href={repo.url} rel="noopener" class="font-display text-xs tracking-[1.4px] text-foreground no-underline border border-hairline px-4 py-2 inline-block hover:bg-surface hover:border-hairline-strong transition-colors duration-150">
+      {t(locale, 'repo_source')}
+    </a>
+  </p>
+</article>

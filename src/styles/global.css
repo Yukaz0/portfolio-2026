@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&family=Inter:wght@400;500;600&display=swap');
+@import "./fonts.css";
 
 /* ============================================================
    Design system: xai (NeedMCP) - dark-first monochrome brutalist.
@@ -79,6 +79,10 @@ html {
   font-family: var(--font-body);
   scroll-behavior: smooth;
 }
+
+/* util kelas body font (Tailwind v4 membuat font-body otomatis dari token,
+   tapi didefinisikan ulang agar eksplisit) */
+.font-body { font-family: var(--font-body); }
 
 body {
   margin: 0;

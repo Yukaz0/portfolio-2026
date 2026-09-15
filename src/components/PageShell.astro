@@ -1,0 +1,120 @@
+---
+import type { Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import profile from '../data/profile.json';
+import repos from '../data/public-repos.json';
+import org from '../data/org-summary.json';
+import experience from '../data/experience.json';
+import RepoCard from './RepoCard.astro';
+import OrgStats from './OrgStats.astro';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+// urutan kurasi manual (alasan: pocketkafka paling signifikan saat ini)
+const FEATURED = 'pocketkafka';
+const SHOWCASE = ['industrial-iot-dashboard', 'kafka-ws-bridge', 'digital-gateway-notifier', 'opc-load-simulator-python', 'pi-codego'];
+const byName = new Map(repos.map((r) => [r.name, r]));
+const featured = byName.get(FEATURED);
+const rest = SHOWCASE.map((n) => byName.get(n)).filter((r): r is (typeof repos)[number] => Boolean(r));
+---
+<!-- HERO -->
+<section id="hero" class="mx-auto max-w-[1280px] px-6 pt-band pb-section">
+  <p class="font-display text-xs tracking-[1.4px] text-mute uppercase mb-lg">{t(locale, 'hero_greeting')}</p>
+  <h1 class="font-display font-light text-foreground leading-tight text-[clamp(48px,8vw,72px)] m-0">{t(locale, 'hero_name')}</h1>
+  <p class="max-w-[640px] text-lg leading-[1.6] text-body mt-xxl">{t(locale, 'hero_line1')}</p>
+  <p class="max-w-[640px] text-base leading-[1.5] text-mute mt-lg">{t(locale, 'hero_line2')}</p>
+  <div class="flex flex-wrap gap-lg mt-xxl">
+    <a href="#projects" class="font-display text-sm tracking-[1.4px] h-11 px-8 inline-flex items-center bg-foreground text-on-primary no-underline hover:opacity-90 transition-opacity duration-150">{t(locale, 'cta_projects')}</a>
+    <a href={profile.github} rel="noopener" class="font-display text-sm tracking-[1.4px] h-11 px-8 inline-flex items-center border border-hairline-strong text-foreground no-underline hover:border-hairline-strong hover:bg-surface transition-colors duration-150">{t(locale, 'cta_github')}</a>
+    <a href={profile.linkedin} rel="noopener" class="font-display text-sm tracking-[1.4px] h-11 px-8 inline-flex items-center border border-hairline-strong text-foreground no-underline hover:bg-surface transition-colors duration-150">{t(locale, 'cta_linkedin')}</a>
+  </div>
+</section>
+
+<!-- ABOUT: 60/40 asimetris -->
+<section id="about" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
+  <div class="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-xxxl">
+    <div>
+      <h2 class="font-display font-light text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'about_title')}</h2>
+      <p class="text-base leading-[1.5] text-body not-italic m-0 mb-lg">{t(locale, 'about_p1')}</p>
+      <p class="text-base leading-[1.5] text-body m-0 mb-lg">{t(locale, 'about_p2')}</p>
+      <p class="text-base leading-[1.5] text-mute m-0">{t(locale, 'about_p3')}</p>
+    </div>
+    <aside class="md:pt-[56px]">
+      <div class="border border-hairline bg-card p-6">
+        <h3 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg">{t(locale, 'about_stack')}</h3>
+        <ul class="m-0 p-0 list-none flex flex-wrap gap-sm">
+          {profile.stack.map((s) => (
+            <li class="font-display text-xs text-foreground bg-surface border border-hairline px-2 py-1">{s}</li>
+          ))}
+        </ul>
+        <h3 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg mt-xl">{t(locale, 'about_edu')}</h3>
+        <p class="text-sm text-body m-0">{t(locale, 'about_edu_val')}</p>
+        <h3 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg mt-xl">{t(locale, 'about_loc')}</h3>
+        <p class="text-sm text-body m-0">{t(locale, 'about_loc_val')}</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- WORK: timeline + agregat org -->
+<section id="work" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
+  <h2 class="font-display font-light text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'work_title')}</h2>
+  <ol class="m-0 p-0 list-none border-l border-hairline ml-1">
+    {experience.positions.map((p) => (
+      <li class="relative pl-8 pb-xxl last:pb-0">
+        <span class="absolute -left-[5px] top-2 h-[9px] w-[9px] bg-foreground" aria-hidden="true"></span>
+        <p class="font-display text-xs tracking-[1px] text-mute m-0">{t(locale, p.whenKey as never)}</p>
+        <h3 class="text-xl font-normal text-foreground mt-xs mb-xs">{t(locale, p.roleKey as never)}</h3>
+        <p class="text-sm text-body m-0 mb-md">{t(locale, p.orgKey as never)} <span class="text-stone">·</span> {t(locale, p.typeKey as never)}</p>
+        <ul class="m-0 p-0 list-none">
+          {p.bulletKeys.map((b) => (
+            <li class="text-sm leading-[1.5] text-body mb-sm before:content-[''] before:inline-block before:w-2 before:h-2 before:bg-stone before:mr-sm">
+              {t(locale, b as never)}
+            </li>
+          ))}
+        </ul>
+      </li>
+    ))}
+  </ol>
+  <div class="mt-xxxl">
+    <OrgStats locale={locale} />
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
+  <h2 class="font-display font-light text-[48px] leading-tight m-0 mb-lg">{t(locale, 'projects_title')}</h2>
+  <p class="text-base text-mute m-0 mb-xxl max-w-[640px]">{t(locale, 'projects_note')}</p>
+  {featured && (
+    <div class="mb-xxxl">
+      <RepoCard repo={featured} locale={locale} featured />
+    </div>
+  )}
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-lg">
+    {rest.map((r) => <RepoCard repo={r} locale={locale} />)}
+  </div>
+</section>
+
+<!-- CONTACT: teks link nyata, tanpa form -->
+<section id="contact" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
+  <h2 class="font-display font-light text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'contact_title')}</h2>
+  <p class="text-base text-body max-w-[560px] m-0 mb-xxl">{t(locale, 'contact_line')}</p>
+  <ul class="m-0 p-0 list-none grid grid-cols-1 sm:grid-cols-3 gap-lg">
+    <li>
+      <a href={`mailto:${profile.email}`} class="font-display text-sm tracking-[1px] text-foreground no-underline border-b border-hairline-strong hover:bg-surface transition-colors duration-150 break-all">
+        {profile.email}
+      </a>
+    </li>
+    <li>
+      <a href={profile.github} rel="noopener" class="font-display text-sm tracking-[1px] text-foreground no-underline border-b border-hairline-strong hover:bg-surface transition-colors duration-150">
+        github.com/Yukaz0
+      </a>
+    </li>
+    <li>
+      <a href={profile.linkedin} rel="noopener" class="font-display text-sm tracking-[1px] text-foreground no-underline border-b border-hairline-strong hover:bg-surface transition-colors duration-150 break-all">
+        linkedin.com/in/muhammad-jafar-i-5b0062130
+      </a>
+    </li>
+  </ul>
+</section>

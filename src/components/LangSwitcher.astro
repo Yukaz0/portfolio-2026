@@ -1,0 +1,21 @@
+---
+import type { Locale } from '../i18n/config';
+import { LOCALES, LOCALE_LABELS } from '../i18n/config';
+import { t } from '../i18n/ui';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+<nav aria-label={t(locale, 'lang_label')} class="flex items-center gap-0 border border-hairline">
+  {LOCALES.map((l, i) => (
+    <a
+      href={getRelativeLocaleUrl(l, '')}
+      aria-current={l === locale ? 'true' : undefined}
+      class:list={[
+        'font-display text-[11px] tracking-[1px] px-2.5 min-h-11 inline-flex items-center no-underline transition-colors duration-150',
+        l === locale ? 'bg-foreground text-on-primary' : 'bg-transparent text-body hover:text-foreground',
+        i > 0 && 'border-l border-hairline',
+      ]}
+    >{LOCALE_LABELS[l]}</a>
+  ))}
+</nav>

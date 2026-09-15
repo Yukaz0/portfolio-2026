@@ -1,0 +1,26 @@
+---
+import type { Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import profile from '../data/profile.json';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="border-t border-hairline mt-section">
+  <div class="mx-auto max-w-[1280px] px-6 py-12 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+    <p class="font-display text-xs tracking-[1px] text-mute">
+      {profile.name}
+      <span class="text-stone"> / </span>
+      {t(locale, 'footer_built')}
+    </p>
+    <p class="font-display text-xs tracking-[1px] text-mute">
+      <a href={profile.sourceRepo} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150">{t(locale, 'repo_source')}</a>
+      <span class="text-stone"> / </span>
+      <a href={profile.github} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150">GitHub</a>
+      <span class="text-stone"> / </span>
+      <a href={profile.linkedin} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150">LinkedIn</a>
+      <span class="text-stone"> / </span>
+      © {year}
+    </p>
+  </div>
+</footer>

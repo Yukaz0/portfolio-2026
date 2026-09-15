@@ -1,0 +1,36 @@
+---
+import type { Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import org from '../data/org-summary.json';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const hasData = typeof org?.repos === 'number' && org.repos > 0;
+const fmt = (n: number) => n.toLocaleString('en-US');
+---
+<div class="border border-hairline bg-card p-6">
+  <h3 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg">{t(locale, 'orgstats_title')}</h3>
+  {hasData ? (
+    <>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-xl">
+        <div>
+          <p class="font-display font-light text-[48px] leading-none text-foreground m-0">{fmt(org.repos)}</p>
+          <p class="text-sm text-mute m-0 mt-sm">{t(locale, 'orgstats_repos')}</p>
+        </div>
+        <div>
+          <p class="font-display font-light text-[48px] leading-none text-foreground m-0">{fmt(org.commits)}</p>
+          <p class="text-sm text-mute m-0 mt-sm">{t(locale, 'orgstats_commits')}</p>
+        </div>
+        <div>
+          <p class="font-display font-light text-[48px] leading-none text-foreground m-0">{t(locale, 'orgstats_span')}</p>
+          <p class="text-sm text-mute m-0 mt-sm">
+            <a href={org.orgUrl} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150">{t(locale, 'work_org_link')}</a>
+          </p>
+        </div>
+      </div>
+      <p class="text-sm text-mute m-0">{t(locale, 'orgstats_note')}</p>
+      <p class="font-display text-xs tracking-[1px] text-charcoal m-0 mt-sm">{t(locale, 'orgstats_snapshot')}: {org.snapshot}</p>
+    </>
+  ) : (
+    <p class="text-sm text-mute m-0">Data belum di-generate. Jalankan scripts/collect-data.sh</p>
+  )}
+</div>

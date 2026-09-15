@@ -1,0 +1,39 @@
+---
+import type { Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import ThemeToggle from './ThemeToggle.astro';
+import LangSwitcher from './LangSwitcher.astro';
+import profile from '../data/profile.json';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const anchors = [
+  { href: '#about', key: 'nav_about' },
+  { href: '#work', key: 'nav_work' },
+  { href: '#projects', key: 'nav_projects' },
+  { href: '#contact', key: 'nav_contact' },
+] as const;
+---
+<header class="sticky top-0 z-40 bg-background border-b border-hairline">
+  <div class="mx-auto max-w-[1280px] px-6 h-14 flex items-center justify-between gap-4">
+    <a href="#main" class="font-display text-xl tracking-tight text-foreground no-underline hover:text-body transition-opacity duration-150">Ikbal.</a>
+    <nav aria-label="main" class="hidden md:flex items-center gap-1">
+      {anchors.map((a) => (
+        <a href={a.href} class="font-display text-xs tracking-[1px] px-3 py-2 text-body no-underline hover:text-foreground transition-colors duration-150">{t(locale, a.key)}</a>
+      ))}
+      <a href={profile.github} rel="noopener" class="font-display text-xs tracking-[1px] px-3 py-2 text-body no-underline hover:text-foreground transition-colors duration-150">GitHub</a>
+      <a href={profile.linkedin} rel="noopener" class="font-display text-xs tracking-[1px] px-3 py-2 text-body no-underline hover:text-foreground transition-colors duration-150">LinkedIn</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <LangSwitcher locale={locale} />
+      <ThemeToggle locale={locale} />
+    </div>
+  </div>
+  {/* mobile nav: baris kedua, selalu ada (tanpa tombol mati) */}
+  <nav aria-label="mobile" class="md:hidden border-t border-hairline flex overflow-x-auto">
+    {anchors.map((a) => (
+      <a href={a.href} class="shrink-0 font-display text-xs tracking-[1px] px-4 min-h-11 inline-flex items-center text-body no-underline hover:text-foreground">{t(locale, a.key)}</a>
+    ))}
+    <a href={profile.github} rel="noopener" class="shrink-0 font-display text-xs tracking-[1px] px-4 min-h-11 inline-flex items-center text-body no-underline hover:text-foreground">GitHub</a>
+  </nav>
+</header>

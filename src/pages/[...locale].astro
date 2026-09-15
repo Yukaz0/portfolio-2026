@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageShell from '../components/PageShell.astro';
+import { t } from '../i18n/ui';
+import { isLocale, DEFAULT_LOCALE, type Locale } from '../i18n/config';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+export function getStaticPaths() {
+  return ['id', 'zh', 'ja'].map((l) => ({ params: { locale: l } }));
+}
+
+const param = Astro.params.locale ?? '';
+if (!isLocale(param)) return Astro.rewrite(getRelativeLocaleUrl(DEFAULT_LOCALE, ''));
+const locale: Locale = param;
+const titles: Record<Exclude<Locale, 'en'>, string> = {
+  id: 'Engineer Backend & Industrial IoT',
+  zh: '后端与工业物联网工程师',
+  ja: 'バックエンド / Industrial IoT エンジニア',
+};
+---
+<BaseLayout locale={locale} title={`${t(locale, 'hero_name')} - ${titles[locale as Exclude<Locale, 'en'>]}`} description={t(locale, 'hero_line1')}>
+  <PageShell locale={locale} />
+</BaseLayout>
