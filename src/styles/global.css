@@ -1,0 +1,108 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500&family=Inter:wght@400;500;600&display=swap');
+
+/* ============================================================
+   Design system: xai (NeedMCP) - dark-first monochrome brutalist.
+   Alasan (R-31): dark default = identitas kerja terminal/SCADA;
+   light penuh wajib lolos R-34. Satu-satunya warna = ring-focus.
+   Elevation = ring 0 0 0 1px, bukan shadow (xai Don't list).
+   ============================================================ */
+
+@theme {
+  /* Light mode = nilai colors xai */
+  --color-primary: #1f2228;
+  --color-on-primary: #ffffff;
+  --color-background: #f8f8f8;
+  --color-canvas: #ffffff;
+  --color-bone: #f5f5f5;
+  --color-surface: rgba(31, 34, 40, 0.03);
+  --color-card: rgba(31, 34, 40, 0.03);
+  --color-surface-deep: #e5e5e5;
+  --color-foreground: #1f2228;
+  --color-body: rgba(31, 34, 40, 0.7);
+  --color-charcoal: rgba(31, 34, 40, 0.65);
+  --color-mute: rgba(31, 34, 40, 0.65);
+  --color-ash: rgba(31, 34, 40, 0.65);
+  --color-stone: rgba(31, 34, 40, 0.2);
+  --color-hairline: rgba(31, 34, 40, 0.08);
+  --color-hairline-strong: rgba(31, 34, 40, 0.5);
+  --color-divider: rgba(31, 34, 40, 0.1);
+
+  --font-display: 'Geist Mono', ui-monospace, SFMono-Regular, 'Roboto Mono', Menlo, Monaco, monospace;
+  --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+
+  --radius-none: 0;
+  --radius-xsi: 4px;
+
+  --spacing-xxs: 2px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 32px;
+  --spacing-xxxl: 48px;
+  --spacing-section: 96px;
+  --spacing-band: 160px;
+}
+
+:root {
+  --ring-focus: rgba(59, 130, 246, 0.5);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  /* nilai colors-dark xai */
+  --color-primary: #ffffff;
+  --color-on-primary: #1f2228;
+  --color-background: #1f2228;
+  --color-canvas: #1a1d22;
+  --color-bone: #23262c;
+  --color-surface: rgba(255, 255, 255, 0.03);
+  --color-card: rgba(255, 255, 255, 0.03);
+  --color-surface-deep: #181a1f;
+  --color-foreground: #ffffff;
+  --color-body: rgba(255, 255, 255, 0.7);
+  --color-charcoal: rgba(255, 255, 255, 0.6);
+  --color-mute: rgba(255, 255, 255, 0.5);
+  --color-ash: rgba(255, 255, 255, 0.48);
+  --color-stone: rgba(255, 255, 255, 0.2);
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-hairline-strong: rgba(255, 255, 255, 0.34);
+  --color-divider: rgba(255, 255, 255, 0.1);
+  color-scheme: dark;
+}
+
+html {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+}
+
+::selection {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+/* R-32: focus terlihat; ring-focus = satu-satunya warna di sistem */
+:focus-visible {
+  outline: 2px solid var(--ring-focus);
+  outline-offset: 2px;
+}
+
+/* Motion dial 1: feedback hanya opacity/border, TANPA transform (xai Don't) */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* Helper kelas util (dipakai di komponen) */
+.font-display { font-family: var(--font-display); }
+
+.elev-1 { box-shadow: 0 0 0 1px var(--color-hairline); }
+.elev-2 { box-shadow: 0 0 0 1px var(--color-hairline-strong); }
