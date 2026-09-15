@@ -22,10 +22,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Install and build
         uses: withastro/action@v6 # https://github.com/withastro/action/releases
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5 # https://github.com/actions/upload-pages-artifact/releases
-        with:
-          path: dist
+        # action ini sudah meng-upload artifact 'github-pages'; jangan tambah upload-pages-artifact lagi (tabrakan 409)
 
   deploy:
     needs: build
