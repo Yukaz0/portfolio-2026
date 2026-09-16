@@ -19,7 +19,7 @@ command -v jq >/dev/null || { echo "jq missing"; exit 1; }
 echo "== public repos =="
 # sanitasi em dash dari deskripsi GitHub (R-02: teks UI tanpa em dash), null-safe
 gh api "users/$ME/repos?per_page=100" \
-  --jq '[.[] | {name, description: (if .description == null then null else .description | gsub("—"; "-") | gsub("–"; "-") end), language, updatedAt, url: .html_url, fork}] | sort_by(.updatedAt) | reverse' \
+  --jq '[.[] | {name, description: (if .description == null then null else .description | gsub("—"; "-") | gsub("–"; "-") end), language, updatedAt: .updated_at, url: .html_url, fork}] | sort_by(.updatedAt) | reverse' \
   > "$OUT_DIR/public-repos.json"
 
 echo "== org scan (aggregate only) =="

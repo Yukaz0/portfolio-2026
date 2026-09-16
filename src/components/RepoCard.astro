@@ -1,26 +1,43 @@
 ---
-import type { Locale } from '../i18n/config';
+import { DEFAULT_LOCALE, type Locale } from '../i18n/config';
 import { t } from '../i18n/ui';
-import profile from '../data/profile.json';
-interface Props { repo: { name: string; description: string | null; language: string | null; url: string }; locale: Locale; featured?: boolean }
-const { repo, locale, featured = false } = Astro.props;
+import type { CuratedProject } from '../data/project-curation';
+
+interface Props {
+  repo: { name: string; language: string | null; url: string };
+  curation: CuratedProject;
+  locale: Locale;
+  featured?: boolean;
+}
+const { repo, curation, locale, featured = false } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
+const prefix = `${base}${locale === DEFAULT_LOCALE ? '' : `/${locale}`}`;
+const caseStudyHref = curation.caseStudySlug
+  ? `${prefix}/projects/${curation.caseStudySlug}/`
+  : undefined;
+
+// Dua link nyata dalam satu kartu: tidak ada overlay stretched-link,
+// sehingga tidak ada target klik yang saling menutupi.
+const linkClass = 'font-display text-xs tracking-[1.4px] text-foreground no-underline border border-hairline px-4 min-h-11 min-w-11 inline-flex items-center hover:bg-surface hover:border-hairline-strong transition-colors duration-150';
 ---
 <article class:list={[
-  'relative border border-hairline bg-card p-6 flex flex-col gap-md hover:border-hairline-strong transition-colors duration-150',
+  'border border-hairline bg-card p-6 flex flex-col gap-md hover:border-hairline-strong transition-colors duration-150',
   featured && 'sm:p-8 gap-lg',
 ]}>
   <div class="flex items-baseline justify-between gap-lg">
-    <h3 class:list={['font-display text-foreground m-0', featured ? 'text-[30px] leading-tight' : 'text-lg']}>
+    <h3 class:list={['font-display text-foreground m-0', featured ? 'text-[24px] sm:text-[30px] leading-tight' : 'text-lg']}>
       {repo.name}
     </h3>
     <span class="font-display text-xs tracking-[1px] text-mute shrink-0">{repo.language ?? '-'}</span>
   </div>
   <p class="text-sm leading-[1.5] text-body m-0">
-    {repo.description ?? ''}
+    {curation.summary[locale]}
   </p>
-  <p class="m-0 mt-auto pt-sm">
-    <a href={repo.url} rel="noopener" class="font-display text-xs tracking-[1.4px] text-foreground no-underline border border-hairline px-4 py-2 inline-block hover:bg-surface hover:border-hairline-strong transition-colors duration-150 after:content-[''] after:absolute after:inset-0">
-      {t(locale, 'repo_source')}
-    </a>
-  </p>
+  <div class="mt-auto pt-sm flex flex-wrap gap-md">
+    {caseStudyHref && (
+      <a href={caseStudyHref} class={linkClass}>{t(locale, 'repo_case_study')}</a>
+    )}
+    <a href={repo.url} rel="noopener" class={linkClass}>{t(locale, 'repo_source')}</a>
+  </div>
 </article>

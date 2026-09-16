@@ -44,6 +44,9 @@
   --spacing-xxxl: 48px;
   --spacing-section: 96px;
   --spacing-band: 160px;
+  /* Mobile hero band: 160px terlalu kosong di fold kecil (P3).
+     Dipakai sebagai pt-band-sm md:pt-band. */
+  --spacing-band-sm: 72px;
 }
 
 :root {

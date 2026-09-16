@@ -1,0 +1,12 @@
+---
+import CaseStudyPage from '../../components/CaseStudyPage.astro';
+import { CASE_STUDIES } from '../../data/case-studies';
+import { DEFAULT_LOCALE } from '../../i18n/config';
+
+export function getStaticPaths() {
+  return CASE_STUDIES.map((study) => ({ params: { slug: study.slug }, props: { study } }));
+}
+
+const { study } = Astro.props;
+---
+<CaseStudyPage study={study} locale={DEFAULT_LOCALE} />

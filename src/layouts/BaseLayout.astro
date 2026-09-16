@@ -6,19 +6,49 @@ import { t } from '../i18n/ui';
 import type { Locale } from '../i18n/config';
 import { LOCALES, DEFAULT_LOCALE } from '../i18n/config';
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import profile from '../data/profile.json';
 
 interface Props {
   locale: Locale;
   title: string;
   description: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  ogType?: 'website' | 'article';
 }
-const { locale, title, description } = Astro.props;
+const {
+  locale,
+  title,
+  description,
+  ogImage: ogImageProp,
+  ogImageAlt: ogImageAltProp,
+  ogType = 'website',
+} = Astro.props;
+
 const base = import.meta.env.BASE_URL.replace(/\/+$/, '') + '/';
 const otherLocales = LOCALES.filter((l) => l !== locale);
 // '/portfolio-2026' (en, prefixDefaultLocale false) atau '/portfolio-2026/id'
 function localePath(l: Locale): string {
   return getRelativeLocaleUrl(l, '');
 }
+
+// Semua URL metadata absolut terhadap Astro.site (https://www.neuralgin.my.id).
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(ogImageProp ?? '/og/portfolio.png', Astro.site);
+const ogImageAlt = ogImageAltProp ?? `${profile.name}, ${t(locale, 'hero_greeting')}`;
+
+const OG_LOCALES: Record<Locale, string> = { en: 'en_US', id: 'id_ID' };
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  url: new URL('/', Astro.site).href,
+  jobTitle: t(locale, 'hero_greeting'),
+  email: `mailto:${profile.email}`,
+  sameAs: [profile.github, profile.linkedin],
+  knowsAbout: profile.stack,
+};
 ---
 <!doctype html>
 <html lang={locale}>
@@ -28,17 +58,29 @@ function localePath(l: Locale): string {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang={DEFAULT_LOCALE} href={new URL(localePath(DEFAULT_LOCALE), Astro.site)} />
     {otherLocales.map((l) => (
       <link rel="alternate" hreflang={l} href={new URL(localePath(l), Astro.site)} />
     ))}
     <link rel="alternate" hreflang="x-default" href={new URL(localePath(DEFAULT_LOCALE), Astro.site)} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={profile.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)} />
-    <meta property="og:image" content="https://avatars.githubusercontent.com/Yukaz0" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={OG_LOCALES[locale]} />
+    {otherLocales.map((l) => <meta property="og:locale:alternate" content={OG_LOCALES[l]} />)}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(person)} />
     <script is:inline>
       // anti-FOUC: set theme sebelum paint; default dark (identitas xai/terminal)
       (() => {
@@ -49,7 +91,7 @@ function localePath(l: Locale): string {
     </script>
   </head>
   <body class="bg-background text-foreground font-body antialiased">
-    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 z-50 bg-canvas text-foreground border border-hairline-strong px-4 py-2 font-display text-sm">{t(locale, 'skip')}</a>
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 z-50 bg-canvas text-foreground border border-hairline-strong px-4 py-3.5 font-display text-sm">{t(locale, 'skip')}</a>
     <Navbar locale={locale} />
     <main id="main"><slot /></main>
     <Footer locale={locale} />

@@ -12,7 +12,7 @@ const { locale } = Astro.props;
       href={getRelativeLocaleUrl(l, '')}
       aria-current={l === locale ? 'true' : undefined}
       class:list={[
-        'font-display text-[11px] tracking-[1px] px-2.5 min-h-11 inline-flex items-center no-underline transition-colors duration-150',
+        'font-display text-[11px] tracking-[1px] px-2.5 min-h-11 min-w-11 justify-center inline-flex items-center no-underline transition-colors duration-150',
         l === locale ? 'bg-foreground text-on-primary' : 'bg-transparent text-body hover:text-foreground',
         i > 0 && 'border-l border-hairline',
       ]}

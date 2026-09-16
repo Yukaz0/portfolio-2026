@@ -23,7 +23,7 @@ const fmt = (n: number) => n.toLocaleString('en-US');
         <div>
           <p class="font-display font-light text-[48px] leading-none text-foreground m-0">{t(locale, 'orgstats_span')}</p>
           <p class="text-sm text-mute m-0 mt-sm">
-            <a href={org.orgUrl} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150">{t(locale, 'work_org_link')}</a>
+            <a href={org.orgUrl} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150 min-h-11 inline-flex items-center">{t(locale, 'work_org_link')}</a>
           </p>
         </div>
       </div>

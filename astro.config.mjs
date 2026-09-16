@@ -8,7 +8,7 @@ export default defineConfig({
   site: 'https://www.neuralgin.my.id',
   output: 'static',
   i18n: {
-    locales: ['en', 'id', 'zh', 'ja'],
+    locales: ['en', 'id'],
     defaultLocale: 'en',
     routing: {
       prefixDefaultLocale: false,

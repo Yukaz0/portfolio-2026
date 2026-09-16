@@ -14,11 +14,11 @@ const year = new Date().getFullYear();
       {t(locale, 'footer_built')}
     </p>
     <p class="font-display text-xs tracking-[1px] text-mute">
-      <a href={profile.sourceRepo} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150">{t(locale, 'repo_source')}</a>
+      <a href={profile.sourceRepo} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150 inline-flex items-center justify-center min-w-11 py-3.5 -my-3.5">{t(locale, 'repo_source')}</a>
       <span class="text-stone"> / </span>
-      <a href={profile.github} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150">GitHub</a>
+      <a href={profile.github} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150 inline-flex items-center justify-center min-w-11 py-3.5 -my-3.5">GitHub</a>
       <span class="text-stone"> / </span>
-      <a href={profile.linkedin} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150">LinkedIn</a>
+      <a href={profile.linkedin} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150 inline-flex items-center justify-center min-w-11 py-3.5 -my-3.5">LinkedIn</a>
       <span class="text-stone"> / </span>
       © {year}
     </p>

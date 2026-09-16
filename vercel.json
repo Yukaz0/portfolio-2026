@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/zh", "destination": "/", "permanent": true },
+    { "source": "/ja", "destination": "/", "permanent": true },
+    { "source": "/zh/:path*", "destination": "/:path*", "permanent": true },
+    { "source": "/ja/:path*", "destination": "/:path*", "permanent": true }
+  ]
+}

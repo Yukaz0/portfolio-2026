@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { DEFAULT_LOCALE, type Locale } from '../i18n/config';
+import { t } from '../i18n/ui';
+import type { CaseStudy } from '../data/case-studies';
+
+interface Props {
+  study: CaseStudy;
+  locale: Locale;
+}
+const { study, locale } = Astro.props;
+const c = study.content[locale];
+
+// Kembali ke section Projects pada homepage locale yang sama.
+const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
+const homeHref = `${base}${locale === DEFAULT_LOCALE ? '' : `/${locale}`}`;
+const backHref = `${homeHref}/#projects`;
+
+const sections = [
+  { key: 'cs_problem', items: c.problem },
+  { key: 'cs_constraints', items: c.constraints },
+  { key: 'cs_architecture', items: c.architecture },
+  { key: 'cs_decisions', items: c.decisions },
+  { key: 'cs_verification', items: c.verification },
+] as const;
+
+const idx = (i: number) => String(i + 1).padStart(2, '0');
+---
+
+<BaseLayout locale={locale} title={`${c.title} - ${study.repoName}`} description={c.summary} ogType="article" ogImageAlt={c.title}>
+  <article aria-labelledby="cs-title" class="mx-auto max-w-[1280px] px-6 pt-band-sm md:pt-band pb-section">
+
+    <a href={backHref} class="font-display text-xs tracking-[1.4px] uppercase text-mute no-underline hover:text-foreground transition-colors duration-150 inline-flex items-center min-h-11">
+      {t(locale, 'cs_back')}
+    </a>
+
+    <!-- HEADER -->
+    <header class="mt-lg pb-xxl border-b border-hairline">
+      <p class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg">{study.repoName}</p>
+      <h1 id="cs-title" class="font-display font-light text-foreground leading-tight text-[clamp(24px,6vw,56px)] m-0 max-w-[900px]">{c.title}</h1>
+      <p class="text-lg leading-[1.6] text-body max-w-[720px] mt-xxl m-0">{c.summary}</p>
+
+      <dl class="mt-xxl m-0 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-x-xxxl gap-y-lg items-start">
+        <dt class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0">{t(locale, 'cs_role')}</dt>
+        <dd class="text-sm leading-[1.5] text-body m-0 max-w-[720px]">{c.role}</dd>
+
+        <dt class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0">{t(locale, 'cs_stack')}</dt>
+        <dd class="m-0">
+          <ul class="m-0 p-0 list-none flex flex-wrap gap-sm">
+            {study.stack.map((s) => (
+              <li class="font-display text-xs text-foreground bg-surface border border-hairline px-2 py-1">{s}</li>
+            ))}
+          </ul>
+        </dd>
+      </dl>
+    </header>
+
+    <!-- FLOW DIAGRAM: teks + nomor, bukan gambar, jadi tetap terbaca tanpa visual -->
+    <figure class="border border-hairline bg-card p-6 mt-xxl m-0">
+      <figcaption class="font-display text-xs tracking-[1.4px] uppercase text-mute mb-lg">{t(locale, 'cs_diagram')}</figcaption>
+      <ol class="m-0 p-0 list-none flex flex-wrap gap-sm">
+        {study.flow.map((step, i) => (
+          <li class="flex items-center gap-sm border border-hairline bg-background px-3 py-2 max-w-full">
+            <span class="font-display text-[10px] text-mute" aria-hidden="true">{idx(i)}</span>
+            <span class="font-display text-xs leading-[1.4] text-foreground break-words">{step}</span>
+          </li>
+        ))}
+      </ol>
+      <p class="text-sm leading-[1.5] text-mute m-0 mt-lg">{t(locale, 'cs_diagram_note')}</p>
+    </figure>
+
+    <!-- SECTIONS: label kolom kiri (spec-sheet), bukan grid kartu seragam -->
+    {sections.map((section, i) => (
+      <section class="mt-xxxl pt-xxl border-t border-hairline grid grid-cols-1 md:grid-cols-[220px_1fr] gap-lg md:gap-xxxl">
+        <h2 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 md:sticky md:top-24 self-start">
+          <span class="text-stone mr-sm" aria-hidden="true">{idx(i)}</span>{t(locale, section.key)}
+        </h2>
+        <ul class="m-0 p-0 list-none max-w-[720px]">
+          {section.items.map((item) => (
+            <li class="text-base leading-[1.6] text-body mb-lg last:mb-0 pl-6 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-stone">
+              {item}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <!-- RESULTS: dibedakan sebagai hasil, bukan daftar biasa -->
+    <section class="mt-xxxl pt-xxl border-t border-hairline grid grid-cols-1 md:grid-cols-[220px_1fr] gap-lg md:gap-xxxl">
+      <h2 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 md:sticky md:top-24 self-start">
+        <span class="text-stone mr-sm" aria-hidden="true">{idx(sections.length)}</span>{t(locale, 'cs_results')}
+      </h2>
+      <ul class="m-0 p-0 list-none max-w-[720px] border border-hairline bg-card p-6">
+        {c.results.map((item) => (
+          <li class="text-base leading-[1.6] text-body mb-lg last:mb-0 pl-6 relative before:content-[''] before:absolute before:left-0 before:top-[10px] before:w-2 before:h-2 before:bg-foreground">
+            {item}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- LINKS -->
+    <section class="mt-xxxl pt-xxl border-t border-hairline grid grid-cols-1 md:grid-cols-[220px_1fr] gap-lg md:gap-xxxl">
+      <h2 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 self-start">{t(locale, 'cs_links')}</h2>
+      <div class="max-w-[720px]">
+        <div class="flex flex-wrap gap-lg">
+          <a href={study.sourceUrl} rel="noopener" class="font-display text-sm tracking-[1.4px] h-11 px-8 inline-flex items-center border border-hairline-strong text-foreground no-underline hover:bg-surface transition-colors duration-150">
+            {t(locale, 'cs_source')}
+          </a>
+          {study.demoUrl && (
+            <a href={study.demoUrl} rel="noopener" class="font-display text-sm tracking-[1.4px] h-11 px-8 inline-flex items-center border border-hairline-strong text-foreground no-underline hover:bg-surface transition-colors duration-150">
+              {t(locale, 'cs_demo')}
+            </a>
+          )}
+        </div>
+        <p class="text-sm leading-[1.5] text-mute m-0 mt-xl">{t(locale, 'cs_evidence_note')}</p>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
