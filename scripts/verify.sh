@@ -176,4 +176,41 @@ for f in $HTML_FILES; do
     || bad "JSON-LD tidak valid sebagai Person di $f"
 done
 
+step "motion tokens ada (MOTION 2)"
+for t in --motion-fast --motion-base --motion-enter --motion-slow --ease-standard --ease-enter --stagger; do
+  grep -q -- "$t" src/styles/motion.css || bad "token motion hilang: $t"
+done
+
+step "motion dilarang: transition all, durasi panjang, animasi layout"
+if grep -rnE 'transition(-property)?:\s*all' src/styles src/components src/layouts src/scripts 2>/dev/null; then
+  bad "transition: all ditemukan (tidak predictable, plan §18)"
+fi
+# durasi literal di atas 3s: batas a11y plan §33 (ambient maksimum 3s)
+if grep -rnE '(transition|animation)[^;{}]*[0-9]{4,}ms' src/styles src/components src/layouts 2>/dev/null; then
+  bad "durasi animasi di atas 3s ditemukan"
+fi
+# animasi properti layout: dilarang, kecuali lebar garis timeline lewat transform
+if grep -rnE 'transition:[^;]*(width|height|margin|padding|top|left)\b' src/styles src/components src/layouts 2>/dev/null; then
+  bad "ada transition pada properti layout (plan §30)"
+fi
+
+step "reduced motion dan progressive enhancement"
+grep -q 'prefers-reduced-motion' src/styles/motion.css || bad "motion.css tidak menangani prefers-reduced-motion"
+grep -q 'prefers-reduced-motion' src/styles/global.css || bad "global.css tidak menangani prefers-reduced-motion"
+# konten tidak boleh disembunyikan sebelum html.js dipasang (plan §22)
+if grep -rnE '^\s*\[data-reveal\][^{]*\{[^}]*opacity:\s*0' src/styles 2>/dev/null; then
+  bad "aturan reveal menyembunyikan konten tanpa gate .js"
+fi
+grep -q 'classList.add(.js.)' src/layouts/BaseLayout.astro || bad "class .js tidak dipasang sebelum paint"
+
+step "satu ambient loop saja dan bisa dijeda"
+ambient_files=$(grep -rl 'data-ambient' src --include='*.astro' 2>/dev/null | wc -l | tr -d ' ')
+[ "$ambient_files" -le 1 ] || bad "ada $ambient_files komponen ber-animasi ambient, maksimum 1 (plan §38)"
+grep -q '.is-paused' src/styles/motion.css || bad "ambient loop tidak punya mekanisme pause (plan §15.3)"
+
+step "outline fokus tidak dihapus tanpa pengganti (R-32)"
+if grep -rnE 'outline:\s*(none|0)' src/styles src/components src/layouts 2>/dev/null; then
+  bad "outline dihapus tanpa pengganti focus"
+fi
+
 if [ "$fail" = "0" ]; then echo; echo "verify OK"; else echo; echo "verify GAGAL"; exit 1; fi
