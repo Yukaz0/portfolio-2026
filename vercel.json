@@ -3,7 +3,7 @@
   "redirects": [
     { "source": "/zh", "destination": "/", "permanent": true },
     { "source": "/ja", "destination": "/", "permanent": true },
-    { "source": "/zh/:path*", "destination": "/:path*", "permanent": true },
-    { "source": "/ja/:path*", "destination": "/:path*", "permanent": true }
+    { "source": "/zh/(.*)", "destination": "/$1", "permanent": true },
+    { "source": "/ja/(.*)", "destination": "/$1", "permanent": true }
   ]
 }
