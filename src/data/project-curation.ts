@@ -15,6 +15,8 @@ export interface CuratedProject {
   repoName: string;
   featured: boolean;
   caseStudySlug?: string;
+  /** Diagram alir beranimasi. Maksimal satu proyek, lihat DESIGN.md MOTION 2. */
+  showFlow?: boolean;
   summary: Record<Locale, string>;
   evidence: string[];
 }
@@ -24,6 +26,7 @@ export const CURATED_PROJECTS: CuratedProject[] = [
     repoName: 'pocketkafka',
     featured: true,
     caseStudySlug: 'pocketkafka',
+    showFlow: true,
     summary: {
       en: 'A Kafka-compatible event broker written from scratch in Go. Wire protocol, consumer-group coordination, log compaction, tiered storage, a schema registry, and REST plus MQTT gateways all ship in one static binary with no third-party dependencies.',
       id: 'Broker event streaming kompatibel Kafka yang ditulis dari nol dengan Go. Protokol wire, koordinasi consumer group, log compaction, tiered storage, schema registry, serta gateway REST dan MQTT semuanya ada dalam satu binary statis tanpa dependency pihak ketiga.',

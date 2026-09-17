@@ -8,8 +8,10 @@ interface Props {
   curation: CuratedProject;
   locale: Locale;
   featured?: boolean;
+  /** Urutan dalam grup stagger: kartu anak [data-stagger] memakai ini sebagai --index. */
+  index?: number;
 }
-const { repo, curation, locale, featured = false } = Astro.props;
+const { repo, curation, locale, featured = false, index = 0 } = Astro.props;
 
 const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
 const prefix = `${base}${locale === DEFAULT_LOCALE ? '' : `/${locale}`}`;
@@ -17,27 +19,38 @@ const caseStudyHref = curation.caseStudySlug
   ? `${prefix}/projects/${curation.caseStudySlug}/`
   : undefined;
 
-// Dua link nyata dalam satu kartu: tidak ada overlay stretched-link,
-// sehingga tidak ada target klik yang saling menutupi.
-const linkClass = 'font-display text-xs tracking-[1.4px] text-foreground no-underline border border-hairline px-4 min-h-11 min-w-11 inline-flex items-center hover:bg-surface hover:border-hairline-strong transition-colors duration-150';
+// Arrow dipakai hanya di sini, bukan di semua tombol: fungsinya menandai kontrol
+// yang membawa ke halaman lain (R-08). Tanpa overlay stretched-link, karena dua
+// link nyata tidak boleh saling menutupi.
+const linkClass = 'project-link font-display text-xs tracking-[1.4px] text-foreground no-underline border border-hairline px-4 min-h-11 min-w-11 inline-flex items-center hover:bg-surface hover:border-hairline-strong transition-colors duration-150';
 ---
-<article class:list={[
-  'border border-hairline bg-card p-6 flex flex-col gap-md hover:border-hairline-strong transition-colors duration-150',
-  featured && 'sm:p-8 gap-lg',
-]}>
+<article
+  class:list={[
+    'project-card border border-hairline bg-card p-6 flex flex-col gap-md hover:border-hairline-strong transition-colors duration-150',
+    featured && 'sm:p-8 gap-lg',
+  ]}
+  style={`--index: ${index}`}
+>
   <div class="flex items-baseline justify-between gap-lg">
     <h3 class:list={['font-display text-foreground m-0', featured ? 'text-[24px] sm:text-[30px] leading-tight' : 'text-lg']}>
       {repo.name}
     </h3>
-    <span class="font-display text-xs tracking-[1px] text-mute shrink-0">{repo.language ?? '-'}</span>
+    <span class="lang-label font-display text-xs tracking-[1px] text-mute shrink-0">{repo.language ?? '-'}</span>
   </div>
   <p class="text-sm leading-[1.5] text-body m-0">
     {curation.summary[locale]}
   </p>
+  <slot />
   <div class="mt-auto pt-sm flex flex-wrap gap-md">
     {caseStudyHref && (
-      <a href={caseStudyHref} class={linkClass}>{t(locale, 'repo_case_study')}</a>
+      <a href={caseStudyHref} class={linkClass}>
+        <span>{t(locale, 'repo_case_study')}</span>
+        <span class="link-arrow" aria-hidden="true">&#8594;</span>
+      </a>
     )}
-    <a href={repo.url} rel="noopener" class={linkClass}>{t(locale, 'repo_source')}</a>
+    <a href={repo.url} rel="noopener" class={linkClass}>
+      <span>{t(locale, 'repo_source')}</span>
+      <span class="link-arrow" aria-hidden="true">&#8594;</span>
+    </a>
   </div>
 </article>

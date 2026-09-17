@@ -1,0 +1,25 @@
+---
+import type { Locale } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+<!--
+  Diagram aliran data proyek featured, dan satu-satunya ambient loop di situs
+  (DESIGN.md MOTION 2). Hanya track dan marker yang aria-hidden, jadi tidak ada
+  informasi yang hanya tersedia lewat animasi.
+-->
+<div class="mt-lg pt-lg border-t border-hairline" data-ambient>
+  <ol
+    aria-label={t(locale, 'cs_diagram')}
+    class="m-0 p-0 list-none flex justify-between gap-sm font-display text-[10px] tracking-[1.2px] uppercase text-mute"
+  >
+    <li>Producer</li>
+    <li>Broker</li>
+    <li>Consumer</li>
+  </ol>
+  <span class="pflow-track mt-sm" aria-hidden="true">
+    <span class="pflow-sweep"><span class="pflow-dot"></span></span>
+  </span>
+</div>

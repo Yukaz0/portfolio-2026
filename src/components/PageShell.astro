@@ -7,6 +7,7 @@ import experience from '../data/experience.json';
 import { CURATED_PROJECTS, type CuratedProject } from '../data/project-curation';
 import RepoCard from './RepoCard.astro';
 import OrgStats from './OrgStats.astro';
+import ProjectFlow from './Motion/ProjectFlow.astro';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -30,18 +31,20 @@ const flagshipSlug = featured?.curation.caseStudySlug;
 const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : undefined;
 ---
 <!-- HERO -->
+<!-- Entrance berurutan mengikuti urutan kepentingan recruiter. CSS murni tanpa
+     JS: hero adalah elemen LCP dan tidak boleh menunggu script. -->
 <section id="hero" class="mx-auto max-w-[1280px] px-6 pt-band-sm md:pt-band pb-section">
-  <p class="font-display text-xs tracking-[1.4px] text-mute uppercase mb-lg">{t(locale, 'hero_greeting')}</p>
-  <h1 class="font-display font-light text-foreground leading-tight text-[clamp(36px,9vw,72px)] m-0">{t(locale, 'hero_name')}</h1>
-  <p class="max-w-[640px] text-lg leading-[1.6] text-body mt-xxl">{t(locale, 'hero_line1')}</p>
-  <p class="max-w-[640px] text-base leading-[1.5] text-mute mt-lg">{t(locale, 'hero_line2')}</p>
-  <div class="flex flex-wrap gap-lg mt-xxl">
+  <p data-hero-step style="--hero-delay: 0ms" class="font-display text-xs tracking-[1.4px] text-mute uppercase mb-lg">{t(locale, 'hero_greeting')}</p>
+  <h1 data-hero-step style="--hero-delay: 50ms" class="font-display font-light text-foreground leading-tight text-[clamp(36px,9vw,72px)] m-0">{t(locale, 'hero_name')}</h1>
+  <p data-hero-step style="--hero-delay: 110ms" class="max-w-[640px] text-lg leading-[1.6] text-body mt-xxl">{t(locale, 'hero_line1')}</p>
+  <p data-hero-step style="--hero-delay: 170ms" class="max-w-[640px] text-base leading-[1.5] text-mute mt-lg">{t(locale, 'hero_line2')}</p>
+  <div data-hero-step style="--hero-delay: 230ms" class="flex flex-wrap gap-lg mt-xxl">
     <a href={resumeHref} download class="font-display text-sm tracking-[1.4px] h-11 px-8 inline-flex items-center bg-foreground text-on-primary no-underline hover:opacity-90 transition-opacity duration-150">{t(locale, 'cta_resume')}</a>
     {flagshipHref && (
       <a href={flagshipHref} class="font-display text-sm tracking-[1.4px] h-11 px-8 inline-flex items-center border border-hairline-strong text-foreground no-underline hover:bg-surface transition-colors duration-150">{t(locale, 'cta_flagship')}</a>
     )}
   </div>
-  <ul class="m-0 p-0 list-none flex flex-wrap gap-x-xxl gap-y-sm mt-lg">
+  <ul data-hero-step style="--hero-delay: 270ms" class="m-0 p-0 list-none flex flex-wrap gap-x-xxl gap-y-sm mt-lg">
     <li>
       <a href={profile.github} rel="noopener" class="font-display text-xs tracking-[1.4px] min-h-11 inline-flex items-center text-body no-underline hover:text-foreground transition-colors duration-150">
         <span class="border-b border-hairline-strong pb-0.5">{t(locale, 'cta_github')}</span>
@@ -56,37 +59,38 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
 </section>
 
 <!-- ABOUT: 60/40 asimetris -->
-<section id="about" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
+<section id="about" data-nav-section="about" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
   <div class="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-xxxl">
     <div>
-      <h2 class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'about_title')}</h2>
-      <p class="text-base leading-[1.5] text-body not-italic m-0 mb-lg">{t(locale, 'about_p1')}</p>
-      <p class="text-base leading-[1.5] text-body m-0 mb-lg">{t(locale, 'about_p2')}</p>
-      <p class="text-base leading-[1.5] text-mute m-0">{t(locale, 'about_p3')}</p>
+      <h2 data-reveal class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'about_title')}</h2>
+      <p data-reveal class="text-base leading-[1.5] text-body not-italic m-0 mb-lg">{t(locale, 'about_p1')}</p>
+      <p data-reveal class="text-base leading-[1.5] text-body m-0 mb-lg">{t(locale, 'about_p2')}</p>
+      <p data-reveal class="text-base leading-[1.5] text-mute m-0">{t(locale, 'about_p3')}</p>
     </div>
     <aside class="md:pt-[56px]">
       <div class="border border-hairline bg-card p-6">
-        <h3 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg">{t(locale, 'about_stack')}</h3>
-        <ul class="m-0 p-0 list-none flex flex-wrap gap-sm">
-          {profile.stack.map((s) => (
-            <li class="font-display text-xs text-foreground bg-surface border border-hairline px-2 py-1">{s}</li>
+        <h3 data-reveal class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg">{t(locale, 'about_stack')}</h3>
+        <ul data-stagger class="m-0 p-0 list-none flex flex-wrap gap-sm">
+          {profile.stack.map((s, i) => (
+            <li style={`--index: ${i}`} class="font-display text-xs text-foreground bg-surface border border-hairline px-2 py-1">{s}</li>
           ))}
         </ul>
-        <h3 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg mt-xl">{t(locale, 'about_edu')}</h3>
-        <p class="text-sm text-body m-0">{t(locale, 'about_edu_val')}</p>
-        <h3 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg mt-xl">{t(locale, 'about_loc')}</h3>
-        <p class="text-sm text-body m-0">{t(locale, 'about_loc_val')}</p>
+        <h3 data-reveal="fade" class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg mt-xl">{t(locale, 'about_edu')}</h3>
+        <p data-reveal="fade" class="text-sm text-body m-0">{t(locale, 'about_edu_val')}</p>
+        <h3 data-reveal="fade" class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg mt-xl">{t(locale, 'about_loc')}</h3>
+        <p data-reveal="fade" class="text-sm text-body m-0">{t(locale, 'about_loc_val')}</p>
       </div>
     </aside>
   </div>
 </section>
 
 <!-- WORK: timeline + agregat org -->
-<section id="work" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
-  <h2 class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'work_title')}</h2>
-  <ol class="m-0 p-0 list-none border-l border-hairline ml-1">
-    {experience.positions.map((p) => (
-      <li class="relative pl-8 pb-xxl last:pb-0">
+<section id="work" data-nav-section="work" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
+  <h2 data-reveal class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'work_title')}</h2>
+  <!-- garis digambar sekali dengan scaleY dari atas; posisi masuk berurutan 90ms -->
+  <ol data-stagger class="timeline m-0 p-0 list-none ml-1">
+    {experience.positions.map((p, i) => (
+      <li style={`--index: ${i}`} class="relative pl-8 pb-xxl last:pb-0">
         <span class="absolute -left-[5px] top-2 h-[9px] w-[9px] bg-foreground" aria-hidden="true"></span>
         <p class="font-display text-xs tracking-[1px] text-mute m-0">{t(locale, p.whenKey as never)}</p>
         <h3 class="text-xl font-normal text-foreground mt-xs mb-xs">{t(locale, p.roleKey as never)}</h3>
@@ -101,30 +105,34 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
       </li>
     ))}
   </ol>
-  <div class="mt-xxxl">
+  <div data-reveal class="mt-xxxl">
     <OrgStats locale={locale} />
   </div>
 </section>
 
 <!-- PROJECTS -->
-<section id="projects" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
-  <h2 class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-lg">{t(locale, 'projects_title')}</h2>
-  <p class="text-base text-mute m-0 mb-xxl max-w-[640px]">{t(locale, 'projects_note')}</p>
+<section id="projects" data-nav-section="projects" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
+  <h2 data-reveal class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-lg">{t(locale, 'projects_title')}</h2>
+  <p data-reveal class="text-base text-mute m-0 mb-xxl max-w-[640px]">{t(locale, 'projects_note')}</p>
   {featured && (
-    <div class="mb-xxxl">
-      <RepoCard repo={featured.repo} curation={featured.curation} locale={locale} featured />
+    <div data-reveal class="mb-xxxl">
+      <RepoCard repo={featured.repo} curation={featured.curation} locale={locale} featured>
+        {featured.curation.showFlow && <ProjectFlow locale={locale} />}
+      </RepoCard>
     </div>
   )}
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-lg">
-    {rest.map((x) => <RepoCard repo={x.repo} curation={x.curation} locale={locale} />)}
+  <div data-stagger class="grid grid-cols-1 sm:grid-cols-2 gap-lg">
+    {rest.map((x, i) => (
+      <RepoCard repo={x.repo} curation={x.curation} locale={locale} index={i} />
+    ))}
   </div>
 </section>
 
 <!-- CONTACT: teks link nyata, tanpa form -->
-<section id="contact" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
-  <h2 class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'contact_title')}</h2>
-  <p class="text-base text-body max-w-[560px] m-0 mb-xxl">{t(locale, 'contact_line')}</p>
-  <ul class="m-0 p-0 list-none grid grid-cols-1 sm:grid-cols-3 gap-lg">
+<section id="contact" data-nav-section="contact" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
+  <h2 data-reveal class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'contact_title')}</h2>
+  <p data-reveal class="text-base text-body max-w-[560px] m-0 mb-xxl">{t(locale, 'contact_line')}</p>
+  <ul data-stagger class="m-0 p-0 list-none grid grid-cols-1 sm:grid-cols-3 gap-lg">
     <li>
       <a href={`mailto:${profile.email}`} class="font-display text-sm tracking-[1px] text-foreground no-underline border-b border-hairline-strong hover:bg-surface transition-colors duration-150 break-all min-h-11 inline-flex items-center">
         {profile.email}

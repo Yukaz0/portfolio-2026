@@ -1,0 +1,262 @@
+/* Motion system (MOTION 2). Token dan aturan ada di satu tempat supaya tidak
+   ada timing random per komponen. Alasan lengkap: DESIGN.md bagian Motion. */
+
+:root {
+  --motion-fast: 120ms;
+  --motion-base: 180ms;
+  --motion-enter: 280ms;
+  --motion-slow: 360ms;
+  --ease-standard: cubic-bezier(.2, .8, .2, 1);
+  --ease-enter: cubic-bezier(.16, 1, .3, 1);
+
+  --stagger: 60ms;
+  --reveal-shift: 8px;
+  --timeline-draw: 520ms;
+  --ambient-cycle: 2600ms;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --stagger: 40ms;
+    --reveal-shift: 5px;
+  }
+}
+
+/* Header sticky setinggi 102px mobile / 57px desktop; tanpa ini judul section
+   mendarat di bawah header. */
+section[id] {
+  scroll-margin-top: 6.75rem;
+}
+
+@media (min-width: 768px) {
+  section[id] {
+    scroll-margin-top: 4.5rem;
+  }
+}
+
+/* CSS murni, tanpa JavaScript: hero adalah elemen LCP dan tidak boleh
+   menunggu script. */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-shift));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-hero-step] {
+  animation: hero-in var(--motion-slow) var(--ease-enter) both;
+  animation-delay: var(--hero-delay, 0ms);
+}
+
+/* Hanya aktif setelah html.js dipasang; tanpa JavaScript konten tetap terlihat. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(var(--reveal-shift));
+}
+
+/* Varian fade untuk teks pendukung (pendidikan, lokasi): muncul tanpa geser. */
+.js [data-reveal="fade"] {
+  transform: none;
+}
+
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--motion-enter) var(--ease-enter),
+    transform var(--motion-enter) var(--ease-enter);
+}
+
+/* Stagger lewat --index, bukan setTimeout per item (plan §28). */
+.js [data-stagger] > * {
+  opacity: 0;
+  transform: translateY(var(--reveal-shift));
+}
+
+.js [data-stagger].is-visible > * {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--motion-enter) var(--ease-enter),
+    transform var(--motion-enter) var(--ease-enter);
+  transition-delay: calc(var(--index, 0) * var(--stagger));
+}
+
+/* Underline dan marker "/" sama-sama tidak mengubah lebar, jadi tidak ada
+   layout shift dan tidak ada overflow di 320px. */
+[data-nav-link] {
+  position: relative;
+}
+
+[data-nav-link]::after {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.5rem;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-fast) var(--ease-standard);
+}
+
+.nav-marker {
+  display: none;
+  width: 0.7em;
+  opacity: 0;
+  transition: opacity var(--motion-fast) var(--ease-standard);
+}
+
+@media (min-width: 768px) {
+  .nav-marker {
+    display: inline-block;
+  }
+}
+
+[data-nav-link][aria-current="location"] .nav-marker {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-nav-link]:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+[data-nav-link][aria-current="location"]::after {
+  transform: scaleX(1);
+}
+
+/* Label bahasa naik dari mute (4.88:1) ke body (5.75:1) saat hover. Versi redup
+   akan jatuh di bawah 4.5:1 untuk teks 12px, dan itu R-25 Hard Gate. */
+.link-arrow {
+  display: inline-block;
+  margin-left: 0.4em;
+  transition: transform var(--motion-fast) var(--ease-standard);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover .link-arrow,
+  .project-link:hover .link-arrow {
+    transform: translateX(3px);
+  }
+
+  .project-card:hover .lang-label {
+    color: var(--color-body);
+  }
+}
+
+.lang-label {
+  transition: color var(--motion-base) var(--ease-standard);
+}
+
+/* scaleY dari atas supaya arahnya mengikuti urutan waktu, tanpa menganimasikan
+   height (layout property). */
+.timeline {
+  position: relative;
+  /* jarak antar posisi kerja lebih lebar dari stagger konten biasa */
+  --stagger: 90ms;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--color-hairline);
+  transform-origin: top;
+}
+
+.js .timeline::before {
+  transform: scaleY(0);
+}
+
+.js .timeline.is-visible::before {
+  transform: scaleY(1);
+  transition: transform var(--timeline-draw) var(--ease-enter);
+}
+
+/* Sweep selebar track, jadi jarak tempuh selalu sama dengan lebar track berapa
+   pun lebar kartunya, dan hanya transform + opacity yang dianimasikan. */
+.pflow-track {
+  position: relative;
+  display: block;
+  height: 1px;
+  background: var(--color-hairline);
+}
+
+.pflow-sweep {
+  position: absolute;
+  inset: 0;
+  display: block;
+  animation: pflow-run var(--ambient-cycle) linear infinite;
+}
+
+.pflow-dot {
+  position: absolute;
+  right: 0;
+  top: -1.5px;
+  width: 4px;
+  height: 4px;
+  background: var(--color-foreground);
+}
+
+@keyframes pflow-run {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 0;
+  }
+}
+
+/* Loop berhenti saat tab tidak aktif atau diagram keluar viewport. */
+.is-paused .pflow-sweep {
+  animation-play-state: paused;
+}
+
+/* Tanpa entrance, tanpa reveal bergerak, tanpa loop. Transisi dasar sudah
+   dinetralkan di global.css. */
+@media (prefers-reduced-motion: reduce) {
+  [data-hero-step] {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .js [data-reveal],
+  .js [data-stagger] > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .js .timeline::before {
+    transform: scaleY(1);
+    transition: none;
+  }
+
+  .pflow-sweep {
+    animation: none;
+    opacity: 0;
+  }
+
+  .link-arrow {
+    transition: none;
+  }
+}

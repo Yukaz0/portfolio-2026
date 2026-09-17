@@ -8,10 +8,10 @@ import profile from '../data/profile.json';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
 const anchors = [
-  { href: '#about', key: 'nav_about' },
-  { href: '#work', key: 'nav_work' },
-  { href: '#projects', key: 'nav_projects' },
-  { href: '#contact', key: 'nav_contact' },
+  { id: 'about', href: '#about', key: 'nav_about' },
+  { id: 'work', href: '#work', key: 'nav_work' },
+  { id: 'projects', href: '#projects', key: 'nav_projects' },
+  { id: 'contact', href: '#contact', key: 'nav_contact' },
 ] as const;
 
 // Section anchor hanya ada di homepage. Dari halaman lain (mis. case study),
@@ -27,7 +27,7 @@ const anchorHref = (hash: string) => (onHome ? hash : `${homePath}${hash}`);
     <a href="#main" class="font-display text-xl tracking-tight text-foreground no-underline hover:text-body transition-opacity duration-150 min-h-11 inline-flex items-center">Ikbal.</a>
     <nav aria-label="main" class="hidden md:flex items-center gap-1">
       {anchors.map((a) => (
-        <a href={anchorHref(a.href)} class="font-display text-xs tracking-[1px] px-3 min-h-11 inline-flex items-center text-body no-underline hover:text-foreground transition-colors duration-150">{t(locale, a.key)}</a>
+        <a href={anchorHref(a.href)} data-nav-link={a.id} class="font-display text-xs tracking-[1px] px-3 min-h-11 inline-flex items-center text-body no-underline hover:text-foreground transition-colors duration-150"><span class="nav-marker" aria-hidden="true">/</span>{t(locale, a.key)}</a>
       ))}
       <a href={profile.github} rel="noopener" class="font-display text-xs tracking-[1px] px-3 min-h-11 inline-flex items-center text-body no-underline hover:text-foreground transition-colors duration-150">GitHub</a>
       <a href={profile.linkedin} rel="noopener" class="font-display text-xs tracking-[1px] px-3 min-h-11 inline-flex items-center text-body no-underline hover:text-foreground transition-colors duration-150">LinkedIn</a>
@@ -41,7 +41,7 @@ const anchorHref = (hash: string) => (onHome ? hash : `${homePath}${hash}`);
       px-3 + 4 anchor = 293px pada text-xs, sehingga muat di 320px tanpa scroll. */}
   <nav aria-label="mobile" class="md:hidden border-t border-hairline flex overflow-x-auto">
     {anchors.map((a) => (
-      <a href={anchorHref(a.href)} class="flex-1 shrink-0 font-display text-xs tracking-[1px] px-3 min-h-11 inline-flex items-center justify-center text-body no-underline hover:text-foreground">{t(locale, a.key)}</a>
+      <a href={anchorHref(a.href)} data-nav-link={a.id} class="flex-1 shrink-0 font-display text-xs tracking-[1px] px-3 min-h-11 inline-flex items-center justify-center text-body no-underline hover:text-foreground">{t(locale, a.key)}</a>
     ))}
   </nav>
 </header>

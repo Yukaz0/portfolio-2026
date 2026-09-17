@@ -102,10 +102,18 @@ body {
   outline-offset: 2px;
 }
 
-/* Motion dial 1: feedback hanya opacity/border, TANPA transform (xai Don't) */
+/* Motion dial 2: feedback hanya opacity/border/transform, TANPA transform dekoratif.
+   Reduced motion mematikan seluruh animasi, termasuk ambient loop (plan §21). */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Helper kelas util (dipakai di komponen) */
