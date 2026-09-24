@@ -7,6 +7,7 @@ Situs portofolio Muhammad Jafar Ikbal. Statis, satu halaman, 2 bahasa (EN dan ID
 - Astro 7 (output statis) + Tailwind CSS 4 via `@tailwindcss/vite`
 - Design system: xai (`docs/xai/`), arah di `DESIGN.md`
 - Deploy: static hosting dengan canonical domain `https://www.neuralgin.my.id` (lihat `public/CNAME`)
+- CV: versi Inggris dan Indonesia tersedia dari tombol unduhan pada halaman bahasa masing-masing.
 
 ## Development
 

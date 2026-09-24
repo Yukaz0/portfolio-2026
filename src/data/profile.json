@@ -3,6 +3,10 @@
   "initials": "JI",
   "email": "jaffrhere23@gmail.com",
   "resumeUrl": "/muhammad-jafar-ikbal-cv.pdf",
+  "resumeUrls": {
+    "en": "/muhammad-jafar-ikbal-cv-en.pdf",
+    "id": "/muhammad-jafar-ikbal-cv-id.pdf"
+  },
   "github": "https://github.com/Yukaz0",
   "linkedin": "https://www.linkedin.com/in/muhammad-jafar-i-5b0062130/",
   "orgUrl": "https://github.com/PT-PLN-ICONPLUS",
