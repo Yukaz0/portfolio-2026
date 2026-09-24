@@ -1,12 +1,12 @@
 # Portfolio 2026
 
-Situs portofolio Muhammad Jafar Ikbal. Statis, satu halaman, 4 bahasa (EN, ID, ZH, JA), tema gelap dengan pilihan terang.
+Situs portofolio Muhammad Jafar Ikbal. Statis, satu halaman, 2 bahasa (EN dan ID), tema gelap dengan pilihan terang.
 
 ## Teknologi
 
 - Astro 7 (output statis) + Tailwind CSS 4 via `@tailwindcss/vite`
 - Design system: xai (`docs/xai/`), arah di `DESIGN.md`
-- Deploy: GitHub Actions ke GitHub Pages (`yukaz0.github.io/portfolio-2026`)
+- Deploy: static hosting dengan canonical domain `https://www.neuralgin.my.id` (lihat `public/CNAME`)
 
 ## Development
 

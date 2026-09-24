@@ -33,7 +33,7 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
 <!-- HERO -->
 <!-- Entrance berurutan mengikuti urutan kepentingan recruiter. CSS murni tanpa
      JS: hero adalah elemen LCP dan tidak boleh menunggu script. -->
-<section id="hero" class="mx-auto max-w-[1280px] px-6 pt-band-sm md:pt-band pb-section">
+<section id="hero" class="mx-auto max-w-[1280px] px-6 pt-[56px] md:pt-[112px] pb-section">
   <p data-hero-step style="--hero-delay: 0ms" class="font-display text-xs tracking-[1.4px] text-mute uppercase mb-lg">{t(locale, 'hero_greeting')}</p>
   <h1 data-hero-step style="--hero-delay: 50ms" class="font-display font-light text-foreground leading-tight text-[clamp(36px,9vw,72px)] m-0">{t(locale, 'hero_name')}</h1>
   <p data-hero-step style="--hero-delay: 110ms" class="max-w-[640px] text-lg leading-[1.6] text-body mt-xxl">{t(locale, 'hero_line1')}</p>

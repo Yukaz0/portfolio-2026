@@ -10,9 +10,12 @@ const { locale } = Astro.props;
   aria-pressed="false"
   data-label-light={t(locale, 'theme_light')}
   data-label-dark={t(locale, 'theme_dark')}
+  data-switch-light={t(locale, 'theme_switch_light')}
+  data-switch-dark={t(locale, 'theme_switch_dark')}
+  aria-label={t(locale, 'theme_switch_light')}
   class="font-display text-[11px] tracking-[1px] h-11 min-w-[72px] px-4 border border-hairline bg-transparent text-body hover:border-hairline-strong hover:text-foreground transition-colors duration-150 cursor-pointer"
 >
-  <span class="theme-label">DARK</span>
+  <span class="theme-label">LIGHT</span>
 </button>
 <script>
   (() => {
@@ -21,10 +24,14 @@ const { locale } = Astro.props;
     const label = btn.querySelector('.theme-label');
     const light = btn.dataset.labelLight || 'LIGHT';
     const dark = btn.dataset.labelDark || 'DARK';
+    const switchLight = btn.dataset.switchLight || 'Switch to light theme';
+    const switchDark = btn.dataset.switchDark || 'Switch to dark theme';
     const render = () => {
       const theme = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
       btn.setAttribute('aria-pressed', String(theme === 'light'));
-      if (label) label.textContent = theme === 'light' ? light : dark;
+      const nextTheme = theme === 'light' ? 'dark' : 'light';
+      if (label) label.textContent = nextTheme === 'light' ? light : dark;
+      btn.setAttribute('aria-label', nextTheme === 'light' ? switchLight : switchDark);
     };
     render();
     btn.addEventListener('click', () => {

@@ -6,6 +6,8 @@ interface Props { locale: Locale }
 const { locale } = Astro.props;
 const hasData = typeof org?.repos === 'number' && org.repos > 0;
 const fmt = (n: number) => n.toLocaleString('en-US');
+const monthLabel = (value: string) => new Date(`${value}-01T00:00:00Z`).toLocaleDateString(locale === 'id' ? 'id-ID' : 'en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const contributionRange = `${monthLabel(org.firstMonth)} - ${monthLabel(org.lastMonth)}`;
 ---
 <div class="border border-hairline bg-card p-6">
   <h3 class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg">{t(locale, 'orgstats_title')}</h3>
@@ -21,7 +23,7 @@ const fmt = (n: number) => n.toLocaleString('en-US');
           <p class="text-sm text-mute m-0 mt-sm">{t(locale, 'orgstats_commits')}</p>
         </div>
         <div>
-          <p class="font-display font-light text-[48px] leading-none text-foreground m-0">{t(locale, 'orgstats_span')}</p>
+          <p class="font-display font-light text-[clamp(28px,4vw,48px)] leading-none text-foreground m-0">{contributionRange}</p>
           <p class="text-sm text-mute m-0 mt-sm">
             <a href={org.orgUrl} rel="noopener" class="text-body no-underline hover:text-foreground hover:underline transition-colors duration-150 min-h-11 inline-flex items-center">{t(locale, 'work_org_link')}</a>
           </p>

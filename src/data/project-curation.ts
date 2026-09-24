@@ -18,6 +18,7 @@ export interface CuratedProject {
   /** Diagram alir beranimasi. Maksimal satu proyek, lihat DESIGN.md MOTION 2. */
   showFlow?: boolean;
   summary: Record<Locale, string>;
+  proofPoints?: Record<Locale, string[]>;
   evidence: string[];
 }
 
@@ -30,6 +31,10 @@ export const CURATED_PROJECTS: CuratedProject[] = [
     summary: {
       en: 'A Kafka-compatible event broker written from scratch in Go. Wire protocol, consumer-group coordination, log compaction, tiered storage, a schema registry, and REST plus MQTT gateways all ship in one static binary with no third-party dependencies.',
       id: 'Broker event streaming kompatibel Kafka yang ditulis dari nol dengan Go. Protokol wire, koordinasi consumer group, log compaction, tiered storage, schema registry, serta gateway REST dan MQTT semuanya ada dalam satu binary statis tanpa dependency pihak ketiga.',
+    },
+    proofPoints: {
+      en: ['Zero third-party Go dependencies', '15 test files across protocol, storage, gateways, and e2e', 'CI runs build, vet, and test on push and pull request'],
+      id: ['Tanpa dependency Go pihak ketiga', '15 file test untuk protokol, storage, gateway, dan e2e', 'CI menjalankan build, vet, dan test pada push dan pull request'],
     },
     evidence: [
       'go.mod contains only the module line and `go 1.26`: zero third-party requires',

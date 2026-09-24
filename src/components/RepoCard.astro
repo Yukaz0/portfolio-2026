@@ -31,6 +31,7 @@ const linkClass = 'project-link font-display text-xs tracking-[1.4px] text-foreg
   ]}
   style={`--index: ${index}`}
 >
+  {featured && <p class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0">{t(locale, 'repo_featured')}</p>}
   <div class="flex items-baseline justify-between gap-lg">
     <h3 class:list={['font-display text-foreground m-0', featured ? 'text-[24px] sm:text-[30px] leading-tight' : 'text-lg']}>
       {repo.name}
@@ -40,6 +41,16 @@ const linkClass = 'project-link font-display text-xs tracking-[1.4px] text-foreg
   <p class="text-sm leading-[1.5] text-body m-0">
     {curation.summary[locale]}
   </p>
+  {featured && curation.proofPoints?.[locale] && (
+    <div class="border-t border-hairline pt-lg">
+      <p class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-sm">{t(locale, 'repo_proof')}</p>
+      <ul class="m-0 p-0 list-none grid gap-xs">
+        {curation.proofPoints[locale].map((point) => (
+          <li class="text-sm leading-[1.5] text-body pl-4 relative before:content-[''] before:absolute before:left-0 before:top-[0.6em] before:w-1.5 before:h-1.5 before:bg-stone">{point}</li>
+        ))}
+      </ul>
+    </div>
+  )}
   <slot />
   <div class="mt-auto pt-sm flex flex-wrap gap-md">
     {caseStudyHref && (
