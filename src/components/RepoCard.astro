@@ -53,6 +53,12 @@ const linkClass = 'project-link font-display text-xs tracking-[1.4px] text-foreg
   )}
   <slot />
   <div class="mt-auto pt-sm flex flex-wrap gap-md">
+    {curation.demoUrl && (
+      <a href={curation.demoUrl} rel="noopener" class={linkClass}>
+        <span>{t(locale, 'repo_demo')}</span>
+        <span class="link-arrow" aria-hidden="true">&#8594;</span>
+      </a>
+    )}
     {caseStudyHref && (
       <a href={caseStudyHref} class={linkClass}>
         <span>{t(locale, 'repo_case_study')}</span>

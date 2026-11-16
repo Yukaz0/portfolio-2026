@@ -15,6 +15,7 @@ export interface CuratedProject {
   repoName: string;
   featured: boolean;
   caseStudySlug?: string;
+  demoUrl?: string;
   /** Diagram alir beranimasi. Maksimal satu proyek, lihat DESIGN.md MOTION 2. */
   showFlow?: boolean;
   summary: Record<Locale, string>;
