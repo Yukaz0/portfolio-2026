@@ -8,6 +8,7 @@ import { CURATED_PROJECTS, type CuratedProject } from '../data/project-curation'
 import RepoCard from './RepoCard.astro';
 import OrgStats from './OrgStats.astro';
 import ProjectFlow from './Motion/ProjectFlow.astro';
+import SignalDiagram from './Motion/SignalDiagram.astro';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
@@ -39,9 +40,10 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
     <span class="hero-corner hero-corner-tr" aria-hidden="true"></span>
     <span class="hero-corner hero-corner-bl" aria-hidden="true"></span>
     <span class="hero-corner hero-corner-br" aria-hidden="true"></span>
+    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-xxxl lg:gap-[64px] items-center lg:px-xxl">
     <div class="max-w-[900px]">
-      <p data-hero-step style="--hero-delay: 0ms" class="font-display text-xs tracking-[1.4px] text-mute uppercase mb-lg">{t(locale, 'hero_greeting')}</p>
-      <h1 data-hero-step style="--hero-delay: 50ms" class="font-display font-light text-foreground leading-[1.08] text-[clamp(36px,9vw,88px)] tracking-[-0.06em] m-0">{t(locale, 'hero_name')}</h1>
+      <p data-hero-step style="--hero-delay: 0ms" class="font-display text-xs tracking-[1.4px] text-mute uppercase mb-lg inline-flex items-center gap-sm"><span class="hero-signal" aria-hidden="true"></span>{t(locale, 'hero_greeting')}</p>
+      <h1 data-hero-step style="--hero-delay: 50ms" class="font-display font-normal text-foreground leading-[1.08] text-[clamp(36px,9vw,88px)] tracking-[-0.06em] m-0">{t(locale, 'hero_name')}</h1>
       <p data-hero-step style="--hero-delay: 110ms" class="max-w-[640px] text-lg leading-[1.6] text-body mt-xxl">{t(locale, 'hero_line1')}</p>
       <p data-hero-step style="--hero-delay: 170ms" class="max-w-[640px] text-base leading-[1.5] text-mute mt-lg">{t(locale, 'hero_line2')}</p>
       <div data-hero-step style="--hero-delay: 230ms" class="flex flex-wrap gap-lg mt-xxl">
@@ -62,6 +64,10 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
           </a>
         </li>
       </ul>
+    </div>
+    <div data-hero-step style="--hero-delay: 200ms" class="w-full max-w-[340px]">
+      <SignalDiagram locale={locale} />
+    </div>
     </div>
   </div>
 </section>
@@ -102,6 +108,19 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
     border-bottom: 1px solid;
   }
 
+  /* LED status: berkedip pelan seperti indikator "online" di panel. */
+  .hero-signal {
+    width: 6px;
+    height: 6px;
+    background: var(--color-signal);
+    animation: hero-signal 2.4s steps(1, end) infinite;
+  }
+
+  @keyframes hero-signal {
+    0%, 70% { opacity: 1; }
+    71%, 100% { opacity: 0.25; }
+  }
+
   @media (max-width: 767px) {
     .hero-frame {
       padding-top: 32px;
@@ -114,7 +133,7 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
 <section id="about" data-nav-section="about" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
   <div class="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-xxxl">
     <div>
-      <h2 data-reveal class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'about_title')}</h2>
+      <h2 data-reveal class="font-display font-normal text-[32px] md:text-[48px] leading-tight m-0 mb-xxl"><span class="section-index" aria-hidden="true">01</span>{t(locale, 'about_title')}</h2>
       <p data-reveal class="text-base leading-[1.5] text-body not-italic m-0 mb-lg">{t(locale, 'about_p1')}</p>
       <p data-reveal class="text-base leading-[1.5] text-body m-0 mb-lg">{t(locale, 'about_p2')}</p>
       <p data-reveal class="text-base leading-[1.5] text-mute m-0">{t(locale, 'about_p3')}</p>
@@ -138,12 +157,12 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
 
 <!-- WORK: timeline + agregat org -->
 <section id="work" data-nav-section="work" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
-  <h2 data-reveal class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'work_title')}</h2>
+  <h2 data-reveal class="font-display font-normal text-[32px] md:text-[48px] leading-tight m-0 mb-xxl"><span class="section-index" aria-hidden="true">02</span>{t(locale, 'work_title')}</h2>
   <!-- garis digambar sekali dengan scaleY dari atas; posisi masuk berurutan 90ms -->
   <ol data-stagger class="timeline m-0 p-0 list-none ml-1">
     {experience.positions.map((p, i) => (
       <li style={`--index: ${i}`} class="relative pl-8 pb-xxl last:pb-0">
-        <span class="absolute -left-[5px] top-2 h-[9px] w-[9px] bg-foreground" aria-hidden="true"></span>
+        <span class:list={["absolute -left-[5px] top-2 h-[9px] w-[9px]", i === 0 ? "timeline-live bg-signal" : "bg-foreground"]} aria-hidden="true"></span>
         <p class="font-display text-xs tracking-[1px] text-mute m-0">{t(locale, p.whenKey as never)}</p>
         <h3 class="text-xl font-normal text-foreground mt-xs mb-xs">{t(locale, p.roleKey as never)}</h3>
         <p class="text-sm text-body m-0 mb-md">{t(locale, p.orgKey as never)} <span class="text-stone">·</span> {t(locale, p.typeKey as never)}</p>
@@ -164,7 +183,7 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
 
 <!-- PROJECTS -->
 <section id="projects" data-nav-section="projects" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
-  <h2 data-reveal class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-lg">{t(locale, 'projects_title')}</h2>
+  <h2 data-reveal class="font-display font-normal text-[32px] md:text-[48px] leading-tight m-0 mb-lg"><span class="section-index" aria-hidden="true">03</span>{t(locale, 'projects_title')}</h2>
   <p data-reveal class="text-base text-mute m-0 mb-xxl max-w-[640px]">{t(locale, 'projects_note')}</p>
   {featured && (
     <div data-reveal class="mb-xxxl">
@@ -182,21 +201,21 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
 
 <!-- CONTACT: teks link nyata, tanpa form -->
 <section id="contact" data-nav-section="contact" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
-  <h2 data-reveal class="font-display font-light text-[32px] md:text-[48px] leading-tight m-0 mb-xxl">{t(locale, 'contact_title')}</h2>
+  <h2 data-reveal class="font-display font-normal text-[32px] md:text-[48px] leading-tight m-0 mb-xxl"><span class="section-index" aria-hidden="true">04</span>{t(locale, 'contact_title')}</h2>
   <p data-reveal class="text-base text-body max-w-[560px] m-0 mb-xxl">{t(locale, 'contact_line')}</p>
   <ul data-stagger class="m-0 p-0 list-none grid grid-cols-1 sm:grid-cols-3 gap-lg">
     <li>
-      <a href={`mailto:${profile.email}`} class="font-display text-sm tracking-[1px] text-foreground no-underline border-b border-hairline-strong hover:bg-surface transition-colors duration-150 break-all min-h-11 inline-flex items-center">
+      <a href={`mailto:${profile.email}`} class="font-display text-sm tracking-[1px] text-foreground no-underline border-b border-hairline-strong hover:border-signal hover:bg-surface transition-colors duration-150 break-all min-h-11 inline-flex items-center">
         {profile.email}
       </a>
     </li>
     <li>
-      <a href={profile.github} rel="noopener" class="font-display text-sm tracking-[1px] text-foreground no-underline border-b border-hairline-strong hover:bg-surface transition-colors duration-150 min-h-11 inline-flex items-center">
+      <a href={profile.github} rel="noopener" class="font-display text-sm tracking-[1px] text-foreground no-underline border-b border-hairline-strong hover:border-signal hover:bg-surface transition-colors duration-150 min-h-11 inline-flex items-center">
         github.com/Yukaz0
       </a>
     </li>
     <li>
-      <a href={profile.linkedin} rel="noopener" class="font-display text-sm tracking-[1px] text-foreground no-underline border-b border-hairline-strong hover:bg-surface transition-colors duration-150 break-all min-h-11 inline-flex items-center">
+      <a href={profile.linkedin} rel="noopener" class="font-display text-sm tracking-[1px] text-foreground no-underline border-b border-hairline-strong hover:border-signal hover:bg-surface transition-colors duration-150 break-all min-h-11 inline-flex items-center">
         linkedin.com/in/muhammad-jafar-i-5b0062130
       </a>
     </li>

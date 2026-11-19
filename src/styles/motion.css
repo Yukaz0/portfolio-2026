@@ -230,6 +230,61 @@ section[id] {
   animation-play-state: paused;
 }
 
+/* Nomor section bergaya label kanal panel: kecil, warna sinyal, di atas baseline. */
+.section-index {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 0.75rem;
+  margin-top: 0.4em;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--color-signal);
+}
+
+/* Garis timeline "teraliri": sinyal di posisi terbaru, memudar ke masa lalu. */
+.timeline::before {
+  background: linear-gradient(to bottom, var(--color-signal), var(--color-hairline) 60%);
+}
+
+/* Cincin pulse pada posisi aktif; hanya transform + opacity. */
+.timeline-live::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1px solid var(--color-signal);
+  animation: live-pulse 2.4s var(--ease-standard) infinite;
+}
+
+@keyframes live-pulse {
+  0% { transform: scale(0.6); opacity: 1; }
+  70%, 100% { transform: scale(1.8); opacity: 0; }
+}
+
+.pflow-dot {
+  background: var(--color-signal);
+}
+
+/* Border kartu menyala mengikuti kursor. --mx/--my diisi motion.ts. */
+.project-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), var(--color-signal), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--motion-base) var(--ease-standard);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover::before {
+    opacity: 1;
+  }
+}
+
 /* Tanpa entrance, tanpa reveal bergerak, tanpa loop. Transisi dasar sudah
    dinetralkan di global.css. */
 @media (prefers-reduced-motion: reduce) {
@@ -258,5 +313,10 @@ section[id] {
 
   .link-arrow {
     transition: none;
+  }
+
+  .timeline-live::after {
+    animation: none;
+    opacity: 0;
   }
 }

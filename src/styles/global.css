@@ -27,6 +27,8 @@
   --color-hairline: rgba(31, 34, 40, 0.08);
   --color-hairline-strong: rgba(31, 34, 40, 0.5);
   --color-divider: rgba(31, 34, 40, 0.1);
+  /* Satu aksen: warna sinyal/alarm panel SCADA. Light 5.4:1 di atas #f8f8f8. */
+  --color-signal: #9a5b00;
 
   --font-display: 'Geist Mono', ui-monospace, SFMono-Regular, 'Roboto Mono', Menlo, Monaco, monospace;
   --font-body: 'Inter', -apple-system, system-ui, sans-serif;
@@ -73,6 +75,7 @@
   --color-hairline: rgba(255, 255, 255, 0.08);
   --color-hairline-strong: rgba(255, 255, 255, 0.34);
   --color-divider: rgba(255, 255, 255, 0.1);
+  --color-signal: #f0b04a;
   color-scheme: dark;
 }
 

@@ -1,0 +1,120 @@
+---
+import type { Locale } from '../../i18n/config';
+import { t } from '../../i18n/ui';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+
+// Node dan jalur dibentuk dari data supaya delay animasi mengikuti urutan aliran.
+const nodes = [
+  { x: 20, y: 8, w: 130, label: 'RTU' },
+  { x: 170, y: 8, w: 130, label: 'PLC' },
+  { x: 20, y: 96, w: 280, label: 'IEC 104 · OPC UA' },
+  { x: 20, y: 184, w: 280, label: 'Services · Python / Java' },
+  { x: 20, y: 272, w: 280, label: 'Kafka' },
+  { x: 20, y: 360, w: 130, label: 'SCADA UI' },
+  { x: 170, y: 360, w: 130, label: 'Alerts · SMS' },
+];
+// step = urutan hop; paket pada step yang sama berjalan bersamaan.
+const edges = [
+  { d: 'M85 48 V96', step: 0 },
+  { d: 'M235 48 V96', step: 0 },
+  { d: 'M160 136 V184', step: 1 },
+  { d: 'M160 224 V272', step: 2 },
+  { d: 'M160 312 V336 H85 V360', step: 3 },
+  { d: 'M160 312 V336 H235 V360', step: 3 },
+];
+const nodeStep = [0, 0, 1, 2, 3, 4, 4];
+---
+<div class="sd" data-ambient>
+  <svg viewBox="0 0 320 408" role="img" aria-label={t(locale, 'hero_diagram')} class="block w-full h-auto">
+    {edges.map((e) => <path d={e.d} class="sd-wire" />)}
+    {edges.map((e) => (
+      <path d={e.d} pathLength="100" class="sd-packet" style={`--step: ${e.step}`} />
+    ))}
+    {nodes.map((n, i) => (
+      <g style={`--step: ${nodeStep[i]}; --i: ${i}`}>
+        <rect x={n.x} y={n.y} width={n.w} height="40" pathLength="1" class="sd-node" />
+        <rect x={n.x + 12} y={n.y + 17} width="6" height="6" class="sd-led" />
+        <text x={n.x + 28} y={n.y + 24} class="sd-label">{n.label}</text>
+      </g>
+    ))}
+  </svg>
+</div>
+
+<style>
+  .sd {
+    --sd-hop: 600ms;
+    --sd-cycle: 3000ms;
+  }
+
+  .sd-wire {
+    fill: none;
+    stroke: var(--color-hairline-strong);
+    stroke-width: 1;
+  }
+
+  /* Satu dash sepanjang 18% jalur meluncur dari awal ke akhir per hop. */
+  .sd-packet {
+    fill: none;
+    stroke: var(--color-signal);
+    stroke-width: 2;
+    stroke-dasharray: 18 100;
+    stroke-dashoffset: 18;
+    animation: sd-flow var(--sd-cycle) linear infinite;
+    animation-delay: calc(var(--step) * var(--sd-hop) + 900ms);
+  }
+
+  .sd-node {
+    fill: var(--color-bone);
+    stroke: var(--color-hairline-strong);
+    stroke-width: 1;
+    stroke-dasharray: 1;
+    animation: sd-draw 700ms var(--ease-enter) both;
+    animation-delay: calc(var(--i) * 70ms + 150ms);
+  }
+
+  .sd-led {
+    fill: var(--color-signal);
+    opacity: 0.3;
+    animation: sd-blink var(--sd-cycle) linear infinite;
+    animation-delay: calc(var(--step) * var(--sd-hop) + 900ms);
+  }
+
+  .sd-label {
+    font-family: var(--font-display);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    fill: var(--color-body);
+  }
+
+  @keyframes sd-draw {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Paket hanya terlihat di 20% pertama siklus = satu hop. */
+  @keyframes sd-flow {
+    0% { stroke-dashoffset: 18; opacity: 1; }
+    20% { stroke-dashoffset: -100; opacity: 1; }
+    20.01%, 100% { stroke-dashoffset: -100; opacity: 0; }
+  }
+
+  /* LED menyala saat paket tiba di node, lalu meredup. */
+  @keyframes sd-blink {
+    0%, 100% { opacity: 0.3; }
+    4% { opacity: 1; }
+    24% { opacity: 0.3; }
+  }
+
+  .sd:global(.is-paused) .sd-packet,
+  .sd:global(.is-paused) .sd-led {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sd-packet { display: none; }
+    .sd-led { animation: none; opacity: 1; }
+    .sd-node { animation: none; stroke-dasharray: none; }
+  }
+</style>

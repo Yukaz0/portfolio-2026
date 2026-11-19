@@ -103,6 +103,50 @@ function initAmbient() {
   ambient.forEach((el) => observer.observe(el));
 }
 
+// Angka statistik menghitung naik sekali saat terlihat. Nilai akhir sudah ada di
+// HTML, jadi tanpa JavaScript atau dengan reduced motion angka tetap benar.
+function initCount() {
+  const els = Array.from(document.querySelectorAll<HTMLElement>('[data-count]'));
+  if (els.length === 0 || prefersReducedMotion.matches) return;
+
+  const run = (el: HTMLElement) => {
+    const target = Number(el.dataset.count);
+    const start = performance.now();
+    const step = (now: number) => {
+      const p = Math.min((now - start) / 900, 1);
+      el.textContent = Math.round(target * (1 - (1 - p) ** 3)).toLocaleString('en-US');
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        run(entry.target as HTMLElement);
+        observer.unobserve(entry.target);
+      }
+    },
+    { threshold: 0.5 },
+  );
+  els.forEach((el) => observer.observe(el));
+}
+
+// Posisi kursor untuk border spotlight kartu proyek.
+function initSpotlight() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  document.addEventListener('pointermove', (e) => {
+    const card = (e.target as Element).closest?.<HTMLElement>('.project-card');
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    card.style.setProperty('--my', `${e.clientY - r.top}px`);
+  }, { passive: true });
+}
+
 initReveal();
 initActiveSection();
 initAmbient();
+initCount();
+initSpotlight();
