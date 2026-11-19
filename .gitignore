@@ -26,3 +26,7 @@ pnpm-debug.log*
 # local agent artifacts (contains internal org repo names - never commit)
 .hermes/
 .commandcode/
+
+.serena/
+graphify-out/
+.playwright-mcp/
