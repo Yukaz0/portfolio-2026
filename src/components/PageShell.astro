@@ -35,7 +35,7 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
 <!-- Entrance berurutan mengikuti urutan kepentingan recruiter. CSS murni tanpa
      JS: hero adalah elemen LCP dan tidak boleh menunggu script. -->
 <section id="hero" class="mx-auto max-w-[1280px] px-6 pt-[56px] md:pt-[112px] pb-section">
-  <div class="hero-frame relative border-y border-hairline py-xxxl md:py-[64px]">
+  <div class="hero-frame blueprint relative border-y border-hairline py-xxxl md:py-[64px]">
     <span class="hero-corner hero-corner-tl" aria-hidden="true"></span>
     <span class="hero-corner hero-corner-tr" aria-hidden="true"></span>
     <span class="hero-corner hero-corner-bl" aria-hidden="true"></span>
@@ -141,11 +141,19 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
     <aside class="md:pt-[56px]">
       <div class="border border-hairline bg-card p-6">
         <h3 data-reveal class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg">{t(locale, 'about_stack')}</h3>
-        <ul data-stagger class="m-0 p-0 list-none flex flex-wrap gap-sm">
-          {profile.stack.map((s, i) => (
-            <li style={`--index: ${i}`} class="font-display text-xs text-foreground bg-surface border border-hairline px-2 py-1">{s}</li>
+        <!-- Rak modul I/O: satu baris per grup, tiap modul punya LED status. -->
+        <div data-stagger class="rack">
+          {profile.stack.map((g, i) => (
+            <div style={`--index: ${i}`} class="rack-row">
+              <p class="rack-label font-display">{g.label}</p>
+              <ul class="m-0 p-0 list-none flex flex-wrap gap-xs">
+                {g.items.map((s) => (
+                  <li class="rack-module font-display"><span class="rack-led" aria-hidden="true"></span>{s}</li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
         <h3 data-reveal="fade" class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg mt-xl">{t(locale, 'about_edu')}</h3>
         <p data-reveal="fade" class="text-sm text-body m-0">{t(locale, 'about_edu_val')}</p>
         <h3 data-reveal="fade" class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-lg mt-xl">{t(locale, 'about_loc')}</h3>
@@ -156,7 +164,7 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
 </section>
 
 <!-- WORK: timeline + agregat org -->
-<section id="work" data-nav-section="work" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
+<section id="work" data-nav-section="work" class="band mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
   <h2 data-reveal class="font-display font-normal text-[32px] md:text-[48px] leading-tight m-0 mb-xxl"><span class="section-index" aria-hidden="true">02</span>{t(locale, 'work_title')}</h2>
   <!-- garis digambar sekali dengan scaleY dari atas; posisi masuk berurutan 90ms -->
   <ol data-stagger class="timeline m-0 p-0 list-none ml-1">
@@ -200,7 +208,7 @@ const flagshipHref = flagshipSlug ? `${prefix}/projects/${flagshipSlug}/` : unde
 </section>
 
 <!-- CONTACT: teks link nyata, tanpa form -->
-<section id="contact" data-nav-section="contact" class="mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
+<section id="contact" data-nav-section="contact" class="band mx-auto max-w-[1280px] px-6 py-section border-t border-hairline">
   <h2 data-reveal class="font-display font-normal text-[32px] md:text-[48px] leading-tight m-0 mb-xxl"><span class="section-index" aria-hidden="true">04</span>{t(locale, 'contact_title')}</h2>
   <p data-reveal class="text-base text-body max-w-[560px] m-0 mb-xxl">{t(locale, 'contact_line')}</p>
   <ul data-stagger class="m-0 p-0 list-none grid grid-cols-1 sm:grid-cols-3 gap-lg">

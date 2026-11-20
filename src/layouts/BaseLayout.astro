@@ -48,7 +48,7 @@ const person = {
   jobTitle: t(locale, 'hero_greeting'),
   email: `mailto:${profile.email}`,
   sameAs: [profile.github, profile.linkedin],
-  knowsAbout: profile.stack,
+  knowsAbout: profile.stack.flatMap((g) => g.items),
 };
 ---
 <!doctype html>

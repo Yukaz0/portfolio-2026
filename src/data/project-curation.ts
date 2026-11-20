@@ -18,6 +18,8 @@ export interface CuratedProject {
   demoUrl?: string;
   /** Diagram alir beranimasi. Maksimal satu proyek, lihat DESIGN.md MOTION 2. */
   showFlow?: boolean;
+  /** Skema statis di kartu. Node harus bisa ditelusuri ke `evidence`. */
+  flow?: string[];
   summary: Record<Locale, string>;
   proofPoints?: Record<Locale, string[]>;
   evidence: string[];
@@ -48,6 +50,7 @@ export const CURATED_PROJECTS: CuratedProject[] = [
   {
     repoName: 'industrial-iot-dashboard',
     featured: false,
+    flow: ['OPC UA', 'Kafka', 'WebSocket', 'Dashboard'],
     caseStudySlug: 'industrial-iot-dashboard',
     summary: {
       en: 'The presentation layer of an OPC UA to Kafka to WebSocket pipeline. It renders 3-phase voltage, current and power analytics, a digital I/O and breaker state panel, and a threshold alarm log, driven either by live WebSocket telemetry or a built-in mock simulator.',
@@ -64,6 +67,7 @@ export const CURATED_PROJECTS: CuratedProject[] = [
   {
     repoName: 'digital-gateway-notifier',
     featured: false,
+    flow: ['Kafka', 'Worker', 'Telegram · WhatsApp'],
     caseStudySlug: 'digital-gateway-notifier',
     summary: {
       en: 'A Kafka alarm consumer that fans notifications out to Telegram and WhatsApp. A FastAPI backend handles JWT-authenticated user management, a React dashboard edits recipients and channel preferences, and PostgreSQL stores them, with an audit trail published back to Kafka.',
@@ -81,6 +85,7 @@ export const CURATED_PROJECTS: CuratedProject[] = [
   {
     repoName: 'kafka-ws-bridge',
     featured: false,
+    flow: ['Kafka', 'FastAPI', 'WebSocket'],
     summary: {
       en: 'A FastAPI service that bridges Kafka topics to WebSocket clients with topic-based routing. Connected clients subscribe per topic, an HTTP endpoint publishes back to Kafka, and health and metrics endpoints expose the service state.',
       id: 'Layanan FastAPI yang menjembatani topik Kafka ke klien WebSocket dengan routing per topik. Klien yang terhubung berlangganan per topik, ada endpoint HTTP untuk publish balik ke Kafka, dan endpoint health serta metrics untuk memantau layanan.',
@@ -95,6 +100,7 @@ export const CURATED_PROJECTS: CuratedProject[] = [
   {
     repoName: 'opc-load-simulator-python',
     featured: false,
+    flow: ['JSON config', 'OPC UA server', 'Clients · SCADA'],
     summary: {
       en: 'An OPC UA server simulator built on Node-OPCUA for exercising clients, SCADA systems and gateways without physical hardware. Address space and node behaviour come from JSON config, it generates sine, cosine and random sensor values, and it ships with Docker Compose and a Kubernetes manifest.',
       id: 'Simulator server OPC UA berbasis Node-OPCUA untuk menguji klien, sistem SCADA, dan gateway tanpa perangkat fisik. Address space dan perilaku node diatur lewat konfigurasi JSON, nilainya dibangkitkan sebagai sinus, kosinus, dan acak, serta tersedia Docker Compose dan manifest Kubernetes.',
@@ -110,6 +116,7 @@ export const CURATED_PROJECTS: CuratedProject[] = [
   {
     repoName: 'pi-codego',
     featured: false,
+    flow: ['TUI · RPC', 'Agent', 'LLM providers'],
     summary: {
       en: 'A native Go rewrite of a coding-agent CLI: no Node or Bun runtime, an interactive Bubbletea TUI plus print and headless RPC modes, multi-provider LLM clients, native tool execution with context cancellation, and JSONL session trees.',
       id: 'Rewrite native Go dari CLI coding agent: tanpa runtime Node atau Bun, ada TUI Bubbletea interaktif plus mode print dan RPC headless, klien LLM multi-provider, eksekusi tool native dengan pembatalan context, dan session tree JSONL.',

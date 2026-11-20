@@ -124,3 +124,107 @@ body {
 
 .elev-1 { box-shadow: 0 0 0 1px var(--color-hairline); }
 .elev-2 { box-shadow: 0 0 0 1px var(--color-hairline-strong); }
+
+/* ============================================================
+   Ritme visual: band surface, grid blueprint, rak stack, skema kartu.
+   Semua CSS statis; tidak menambah ambient loop (MOTION 2).
+   ============================================================ */
+
+/* Band full-bleed tanpa wrapper: shadow melebar, clip-path memotong vertikal. */
+.band {
+  background: var(--color-surface);
+  box-shadow: 0 0 0 100vmax var(--color-surface);
+  clip-path: inset(0 -100vmax);
+}
+
+/* Kertas blueprint: garis 1px tiap 32px; tertutup di area teks, terlihat di tepi. */
+.blueprint {
+  background-image:
+    linear-gradient(var(--color-hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-hairline) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+.blueprint { isolation: isolate; }
+/* z-index -1 dalam stacking context sendiri: di atas grid, di bawah konten. */
+.blueprint::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 30% 50%, var(--color-background) 30%, transparent 75%);
+}
+
+/* Rak modul I/O di About. */
+.rack { display: grid; gap: var(--spacing-md); }
+.rack-row {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: var(--spacing-md);
+  align-items: start;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-hairline);
+}
+.rack-row:first-child { padding-top: 0; border-top: 0; }
+.rack-label {
+  margin: 0;
+  padding-top: 5px;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--color-mute);
+}
+.rack-module {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-foreground);
+  background: var(--color-bone);
+  border: 1px solid var(--color-hairline);
+  border-left: 2px solid var(--color-hairline-strong);
+  padding: 4px 8px;
+}
+.rack-led { width: 5px; height: 5px; background: var(--color-signal); }
+
+/* Skema alir statis di kartu proyek; hover menyalakan LED berurutan. */
+.schema {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: var(--spacing-sm);
+  padding-top: var(--spacing-md) !important;
+  border-top: 1px dashed var(--color-hairline);
+}
+.schema-node {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--color-body);
+  border: 1px solid var(--color-hairline-strong);
+  background: var(--color-bone);
+  padding: 4px 8px;
+}
+.schema-node { position: relative; }
+.schema-node + .schema-node::before {
+  content: '';
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: 16px;
+  height: 1px;
+  background: var(--color-hairline-strong);
+}
+.schema-node + .schema-node { margin-left: 16px; }
+.schema-led {
+  width: 5px;
+  height: 5px;
+  background: var(--color-stone);
+  transition: background-color 150ms;
+  transition-delay: calc(var(--i) * 90ms);
+}
+.project-card:hover .schema-led,
+.project-card:focus-within .schema-led { background: var(--color-signal); }

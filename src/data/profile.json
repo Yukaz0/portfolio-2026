@@ -11,5 +11,10 @@
   "linkedin": "https://www.linkedin.com/in/muhammad-jafar-i-5b0062130/",
   "orgUrl": "https://github.com/PT-PLN-ICONPLUS",
   "sourceRepo": "https://github.com/Yukaz0/portfolio-2026",
-  "stack": ["Python", "Go", "Java Spring Boot", "Kafka", "OPC UA", "IEC 60870-5 (101/104)", "Modbus", "PostgreSQL", "Docker", "JavaScript/TypeScript", "React"]
+  "stack": [
+    { "label": "Protocols", "items": ["OPC UA", "IEC 60870-5 (101/104)", "Modbus"] },
+    { "label": "Backend", "items": ["Python", "Go", "Java Spring Boot"] },
+    { "label": "Data", "items": ["Kafka", "PostgreSQL"] },
+    { "label": "Ops · UI", "items": ["Docker", "JavaScript/TypeScript", "React"] }
+  ]
 }

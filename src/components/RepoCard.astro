@@ -41,6 +41,13 @@ const linkClass = 'project-link font-display text-xs tracking-[1.4px] text-foreg
   <p class="text-sm leading-[1.5] text-body m-0">
     {curation.summary[locale]}
   </p>
+  {!featured && curation.flow && (
+    <ol aria-label={t(locale, 'cs_diagram')} class="schema m-0 p-0 list-none">
+      {curation.flow.map((node, i) => (
+        <li class="schema-node font-display" style={`--i: ${i}`}><span class="schema-led" aria-hidden="true"></span>{node}</li>
+      ))}
+    </ol>
+  )}
   {featured && curation.proofPoints?.[locale] && (
     <div class="border-t border-hairline pt-lg">
       <p class="font-display text-xs tracking-[1.4px] uppercase text-mute m-0 mb-sm">{t(locale, 'repo_proof')}</p>
